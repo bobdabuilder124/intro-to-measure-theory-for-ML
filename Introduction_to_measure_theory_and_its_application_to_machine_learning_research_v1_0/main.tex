@@ -1,0 +1,2637 @@
+\documentclass[12pt]{amsart}
+\usepackage[margin=1in]{geometry}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\usepackage{mathdots}
+\usepackage{mathrsfs}
+\usepackage[all]{xy}
+\usepackage[pdftex]{graphicx}
+\usepackage{color}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{indent first}
+\usepackage[labelfont=bf,labelsep=period,justification=raggedright]{caption}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{tkz-fct}
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+\usetikzlibrary{patterns}
+\usetikzlibrary{calc}
+\usetikzlibrary{knots}
+\usetikzlibrary{spath3, intersections, hobby}
+\usetikzlibrary{arrows, automata}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{shapes.multipart}
+\usepackage{pgfplots}
+\usepackage{multicol}
+\PassOptionsToPackage{dvipsnames,svgnames}{xcolor}
+\usepackage{textcomp}
+\usepackage{bbm}
+\usepackage{array}
+\newcolumntype{C}{>{$}c<{$}}
+\usepackage{forest}
+\usepackage{tikzsymbols}
+\usetikzlibrary{3d}
+\tdplotsetmaincoords{80}{110}
+\usepackage{worldflags}
+\usepackage{youngtab}
+\usepackage{tikzducks}
+\usepackage{enumerate}
+\usepackage[shortlabels]{enumitem}
+
+\makeatletter
+\DeclareFontFamily{OMX}{MnSymbolE}{}
+\DeclareSymbolFont{MnLargeSymbols}{OMX}{MnSymbolE}{m}{n}
+\SetSymbolFont{MnLargeSymbols}{bold}{OMX}{MnSymbolE}{b}{n}
+\DeclareFontShape{OMX}{MnSymbolE}{m}{n}{
+    <-6>  MnSymbolE5
+   <6-7>  MnSymbolE6
+   <7-8>  MnSymbolE7
+   <8-9>  MnSymbolE8
+   <9-10> MnSymbolE9
+  <10-12> MnSymbolE10
+  <12->   MnSymbolE12
+}{}
+\DeclareFontShape{OMX}{MnSymbolE}{b}{n}{
+    <-6>  MnSymbolE-Bold5
+   <6-7>  MnSymbolE-Bold6
+   <7-8>  MnSymbolE-Bold7
+   <8-9>  MnSymbolE-Bold8
+   <9-10> MnSymbolE-Bold9
+  <10-12> MnSymbolE-Bold10
+  <12->   MnSymbolE-Bold12
+}{}
+
+\let\llangle\@undefined
+\let\rrangle\@undefined
+\DeclareMathDelimiter{\llangle}{\mathopen}%
+                     {MnLargeSymbols}{'164}{MnLargeSymbols}{'164}
+\DeclareMathDelimiter{\rrangle}{\mathclose}%
+                     {MnLargeSymbols}{'171}{MnLargeSymbols}{'171}
+\makeatother
+
+\makeatletter
+\tikzoption{canvas is xy plane at z}[]{%
+  \def\tikz@plane@origin{\pgfpointxyz{0}{0}{#1}}%
+  \def\tikz@plane@x{\pgfpointxyz{1}{0}{#1}}%
+  \def\tikz@plane@y{\pgfpointxyz{0}{1}{#1}}%
+  \tikz@canvas@is@plane
+}
+\makeatother
+
+\tikzset{surface/.style={draw=black, left color=orange,right color=orange,middle
+color=orange!60!#1, fill opacity=1},surface/.default=white}
+
+\newcommand{\coneback}[4][]{
+  %% start at the correct point on the circle, draw the arc, then draw to the origin of the diagram, then close the path
+  \draw[canvas is xy plane at z=#2, #1] (\tdplotmainphi-#4:#3) 
+  arc(\tdplotmainphi-#4:\tdplotmainphi+180+#4:#3) -- (O) --cycle;
+  }
+\newcommand{\conefront}[4][]{
+  \draw[canvas is xy plane at z=#2, #1] (\tdplotmainphi-#4:#3) arc
+  (\tdplotmainphi-#4:\tdplotmainphi-180+#4:#3) -- (O) --cycle;
+  }
+
+\newcommand{\conetruncback}[6][]{
+  \draw[line join=round,#1] plot[variable=\t,domain=\tdplotmainphi-#4:\tdplotmainphi+180+#4] 
+  ({#3*cos(\t)},{#3*sin(\t)},#2)
+  -- plot[variable=\t,domain=\tdplotmainphi+180-#4:\tdplotmainphi+#4] 
+  ({#6*cos(\t)},{#6*sin(\t)},#5)
+  --cycle;
+  }
+
+\newcommand{\conetruncfront}[6][]{
+  \draw[line join=round,#1] plot[variable=\t,domain=\tdplotmainphi-#4:\tdplotmainphi-180+#4] 
+  ({#3*cos(\t)},{#3*sin(\t)},#2)
+  -- plot[variable=\t,domain=\tdplotmainphi-180-#4:\tdplotmainphi+#4] 
+  ({#6*cos(\t)},{#6*sin(\t)},#5)
+  --cycle;
+  }
+
+\pgfplotsset{compat=1.17}
+
+% \topmargin 0.4cm
+% \oddsidemargin 0.5cm
+% \evensidemargin 0.5cm
+% \textwidth 14cm 
+% \textheight 20.2cm
+
+% \setlength{\oddsidemargin}{0.25in}
+% \setlength{\evensidemargin}{0.25in}
+% \setlength{\textwidth}{6in}
+%\setlength{\topmargin}{-0.25in}
+%\setlength{\textheight}{8in}
+
+\DeclareMathOperator{\ab}{ab}
+\DeclareMathOperator{\Area}{Area}
+\DeclareMathOperator{\atan}{atan}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\BGL}{BGL}
+\DeclareMathOperator{\Br}{Br}
+\DeclareMathOperator{\card}{card}
+\DeclareMathOperator{\ch}{ch}
+\DeclareMathOperator{\Char}{char}
+\DeclareMathOperator{\CHur}{CHur}
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\coker}{coker}
+\DeclareMathOperator{\Conf}{Conf}
+\DeclareMathOperator{\Cyc}{\textsc{Cyc}}
+\DeclareMathOperator{\disc}{disc}
+\DeclareMathOperator{\dist}{dist}
+\DeclareMathOperator{\End}{End}
+\DeclareMathOperator{\et}{\text{\'et}}
+\DeclareMathOperator{\even}{even}
+\DeclareMathOperator{\Fix}{Fix}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\GL}{GL}
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\Hur}{Hur}
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\Ind}{Ind}
+\DeclareMathOperator{\Inn}{Inn}
+\DeclareMathOperator{\Int}{int}
+\DeclareMathOperator{\Irr}{Irr}
+\DeclareMathOperator{\lcm}{lcm}
+\DeclareMathOperator{\mix}{mix}
+\DeclareMathOperator{\Mor}{Mor}
+\DeclareMathOperator{\MSet}{\textsc{MSet}}
+\DeclareMathOperator{\odd}{odd}
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\Out}{Out}
+\DeclareMathOperator{\Perm}{Perm}
+\DeclareMathOperator{\PGL}{PGL}
+\DeclareMathOperator{\Pin}{Pin}
+\DeclareMathOperator{\PSet}{\textsc{PSet}}
+\DeclareMathOperator{\PSL}{PSL}
+\DeclareMathOperator{\rad}{rad}
+\DeclareMathOperator{\rel}{rel}
+\DeclareMathOperator{\Root}{root}
+\DeclareMathOperator{\sech}{sech}
+\DeclareMathOperator{\Seq}{\textsc{Seq}}
+\DeclareMathOperator{\Set}{\textsc{Set}}
+\DeclareMathOperator{\SL}{SL}
+\DeclareMathOperator{\SO}{SO}
+\DeclareMathOperator{\Spec}{Spec}
+\DeclareMathOperator{\Spin}{Spin}
+\DeclareMathOperator{\St}{St}
+\DeclareMathOperator{\Surj}{Surj}
+\DeclareMathOperator{\Syl}{Syl}
+\DeclareMathOperator{\tame}{tame}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\TV}{TV}
+\DeclareMathOperator{\UCyc}{\textsc{UCyc}}
+\DeclareMathOperator{\Var}{Var}
+
+\newcommand{\eps}{\varepsilon}
+\newcommand{\QED}{\hspace{\stretch{1}} $\blacksquare$}
+\renewcommand{\AA}{\mathbb{A}}
+\newcommand{\BB}{\mathbb{B}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\FF}{\mathbb{F}}
+\newcommand{\HH}{\mathbb{H}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\OO}{\mathbb{O}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\RR}{\mathbb{R}}
+\renewcommand{\SS}{\mathbb{S}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\bfa}{\mathbf{a}}
+\newcommand{\bfb}{\mathbf{b}}
+\newcommand{\bfc}{\mathbf{c}}
+\newcommand{\bfd}{\mathbf{d}}
+\newcommand{\bfe}{\mathbf{e}}
+\newcommand{\bfm}{\mathbf{m}}
+\newcommand{\bfn}{\mathbf{n}}
+\newcommand{\bfN}{\mathbf{N}}
+\newcommand{\bfp}{\mathbf{p}}
+\newcommand{\bfq}{\mathbf{q}}
+\newcommand{\bft}{\mathbf{t}}
+\newcommand{\bfv}{\mathbf{v}}
+\newcommand{\bfw}{\mathbf{w}}
+\newcommand{\mcA}{\mathcal{A}}
+\newcommand{\mcB}{\mathcal{B}}
+\newcommand{\mcC}{\mathcal{C}}
+\newcommand{\mcD}{\mathcal{D}}
+\newcommand{\mcE}{\mathcal{E}}
+\newcommand{\mcF}{\mathcal{F}}
+\newcommand{\mcG}{\mathcal{G}}
+\newcommand{\mcH}{\mathcal{H}}
+\newcommand{\mcI}{\mathcal{I}}
+\newcommand{\mcJ}{\mathcal{J}}
+\newcommand{\mcK}{\mathcal{K}}
+\newcommand{\mcL}{\mathcal{L}}
+\newcommand{\mcM}{\mathcal{M}}
+\newcommand{\mcN}{\mathcal{N}}
+\newcommand{\mcO}{\mathcal{O}}
+\newcommand{\mcP}{\mathcal{P}}
+\newcommand{\mcQ}{\mathcal{Q}}
+\newcommand{\mcR}{\mathcal{R}}
+\newcommand{\mcS}{\mathcal{S}}
+\newcommand{\mcT}{\mathcal{T}}
+\newcommand{\mcU}{\mathcal{U}}
+\newcommand{\mcW}{\mathcal{W}}
+\newcommand{\mcX}{\mathcal{X}}
+\newcommand{\mcY}{\mathcal{Y}}
+\newcommand{\mcZ}{\mathcal{Z}}
+\newcommand{\mfa}{\mathfrak{a}}
+\newcommand{\mfb}{\mathfrak{b}}
+\newcommand{\mfc}{\mathfrak{c}}
+\newcommand{\mfI}{\mathfrak{I}}
+\newcommand{\mfK}{\mathfrak{K}}
+\newcommand{\mfM}{\mathfrak{M}}
+\newcommand{\mfm}{\mathfrak{m}}
+\newcommand{\mfo}{\mathfrak{o}}
+\newcommand{\mfO}{\mathfrak{O}}
+\newcommand{\mfP}{\mathfrak{P}}
+\newcommand{\mfp}{\mathfrak{p}}
+\newcommand{\mfq}{\mathfrak{q}}
+\newcommand{\mfz}{\mathfrak{z}}
+\newcommand{\msC}{\mathscr{C}}
+\newcommand{\msP}{\mathscr{P}}
+\newcommand{\AGL}{\mathbb{A}\GL}
+\newcommand{\upRiemannint}[2]{
+  \overline{\int_{#1}^{#2}}
+}
+\newcommand{\loRiemannint}[2]{
+  \underline{\int_{#1}^{#2}}
+}
+\newcommand{\Qbar}{\overline{\QQ}}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\newcommand{\bbone}{\mathbbm{1}}
+
+\newcommand{\bgamma}{\boldsymbol{\gamma}}
+\newcommand{\bdelta}{\boldsymbol{\delta}}
+\newcommand{\bpi}{\boldsymbol{\pi}}
+\newcommand{\bsigma}{\boldsymbol{\sigma}}
+
+\newcommand\TikCircle[1][2.5]{{\mathop{\tikz[baseline=-#1]{\draw[thick](0,0)circle[radius=#1mm];}}}}
+
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\DeclareRobustCommand{\sstirling}{\genfrac\{\}{0pt}{}}
+\DeclareRobustCommand{\fstirling}{\genfrac[]{0pt}{}}
+\def\multiset#1#2{\ensuremath{\left(\kern-.3em\left(\genfrac{}{}{0pt}{}{#1}{#2}\right)\kern-.3em\right)}}
+\DeclareRobustCommand{\eulerian}{\genfrac\langle\rangle{0pt}{}}
+
+\newcommand{\planefig}[2] {
+\filldraw[shift={#1},rotate=#2] (.4,.3) circle (2pt);
+\filldraw[shift={#1},rotate=#2] (-.4,.3) circle (2pt);
+\draw[shift={#1},rotate=#2] (-20:.55) arc (-20:-160:.55);
+\draw[shift={#1},rotate=#2] (0,0) circle (1cm);
+}
+
+\makeatletter
+\let\pgfnodeparttrbox\pgfnodeparttwobox
+\let\pgfnodepartblbox\pgfnodepartthreebox
+\let\pgfnodepartbrbox\pgfnodepartfourbox
+\newif\ifpgfcirclecrosssplitcustomfill
+\tikzset{%
+  circle cross split part fill/.code=\def\pgf@lib@sh@ccs@list@fill{#1}\pgfcirclecrosssplitcustomfilltrue,%
+  circle cross split uses custom fill/.is if=pgfcirclecrosssplitcustomfill}
+\pgfdeclareshape{circle cross split}{%
+  \nodeparts{text,two,three,four}%
+  \savedanchor\centerpoint{%
+    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/inner xsep}}%
+    \pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/inner ysep}}%
+    \pgf@x\wd\pgfnodeparttextbox
+    \pgf@yb\dp\pgfnodeparttextbox
+    \pgf@yc\dp\pgfnodeparttwobox
+    \ifdim\pgf@yb>\pgf@yc
+      \pgf@yc\pgf@yb
+    \fi
+    \advance\pgf@y-\pgf@yc
+    \advance\pgf@x\pgf@xa
+    \advance\pgf@y-\pgf@ya
+    \advance\pgf@x.5\pgflinewidth
+    \advance\pgf@y-.5\pgflinewidth
+  }%
+  \savedanchor\twoanchor{%
+    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/inner xsep}}%
+    \pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/inner ysep}}%
+    \advance\pgf@x.5\pgflinewidth
+    \advance\pgf@x\pgf@xa
+    \advance\pgf@y.5\pgflinewidth
+    \advance\pgf@y\pgf@ya
+    \pgf@yb\dp\pgfnodeparttextbox
+    \pgf@yc\dp\pgfnodeparttwobox
+    \ifdim\pgf@yb>\pgf@yc
+      \pgf@yc\pgf@yb
+    \fi
+    \advance\pgf@y\pgf@yc
+  }%
+  \savedanchor\threeanchor{%
+    \pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/inner ysep}}%
+    \pgf@x\wd\pgfnodeparttextbox
+    \pgf@yb\dp\pgfnodeparttextbox
+    \pgf@yc\dp\pgfnodeparttwobox
+    \ifdim\pgf@yb>\pgf@yc
+      \pgf@yc\pgf@yb
+    \fi
+    \advance\pgf@y-\pgf@yc
+    \advance\pgf@y-2\pgf@ya
+    \advance\pgf@y-\pgflinewidth
+    \pgf@yb\ht\pgfnodepartthreebox
+    \pgf@yc\ht\pgfnodepartfourbox
+    \ifdim\pgf@yb>\pgf@yc
+      \pgf@yc\pgf@yb
+    \fi
+    \advance\pgf@y-\pgf@yc
+    \advance\pgf@x-\wd\pgfnodepartthreebox
+  }%
+  \savedanchor\fouranchor{%
+    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/inner xsep}}%
+    \advance\pgf@x\wd\pgfnodepartthreebox
+    \advance\pgf@x2\pgf@xa
+    \advance\pgf@x\pgflinewidth
+  }%
+  \saveddimen\radius{%
+    % height:
+    \pgf@y\ht\pgfnodeparttextbox
+    \pgf@yb\ht\pgfnodeparttwobox
+    \ifdim\pgf@yb>\pgf@y
+      \pgf@y\pgf@yb
+    \fi
+    \pgf@yc\dp\pgfnodeparttextbox
+    \pgf@yb\dp\pgfnodeparttwobox
+    \ifdim\pgf@yc>\pgf@yb
+      \advance\pgf@y\pgf@yc
+    \else
+      \advance\pgf@y\pgf@yb
+    \fi
+    \pgf@yb\ht\pgfnodepartthreebox
+    \ifdim\pgf@yb<\ht\pgfnodepartfourbox
+      \pgf@yb\ht\pgfnodepartfourbox
+    \fi
+    \pgf@yc\dp\pgfnodepartthreebox
+    \ifdim\pgf@yc<\dp\pgfnodepartfourbox
+      \advance\pgf@yb\dp\pgfnodepartfourbox
+    \else
+      \advance\pgf@yb\pgf@yc
+    \fi
+    \ifdim\pgf@yc>\pgf@y
+      \pgf@y\pgf@yc
+    \fi
+    \pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/inner ysep}}%
+    \advance\pgf@y2\pgf@ya
+    %
+    \pgf@x\wd\pgfnodeparttextbox
+    \pgf@xa\wd\pgfnodepartthreebox
+    \pgf@xb\wd\pgfnodeparttwobox
+    \pgf@xc\wd\pgfnodepartfourbox
+    \ifdim\pgf@xa>\pgf@x
+      \pgf@x\pgf@xa
+    \fi
+    \ifdim\pgf@xb>\pgf@x
+      \pgf@x\pgf@xb
+    \fi
+    \ifdim\pgf@xc>\pgf@x
+      \pgf@x\pgf@xc
+    \fi
+    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/inner xsep}}%
+    \advance\pgf@x2\pgf@xa
+    \ifdim\pgf@y>\pgf@x
+      \pgf@x\pgf@y
+    \fi
+    \advance\pgf@x.5\pgflinewidth
+    %
+    \pgfmathsetlength{\pgf@xb}{\pgfkeysvalueof{/pgf/minimum width}}%
+    \pgfmathsetlength{\pgf@yb}{\pgfkeysvalueof{/pgf/minimum height}}%
+    \ifdim\pgf@x<.5\pgf@xb
+        \pgf@x=.5\pgf@xb
+    \fi
+    \ifdim\pgf@x<.5\pgf@yb
+        \pgf@x=.5\pgf@yb
+    \fi
+    %
+    \pgfmathsetlength{\pgf@xb}{\pgfkeysvalueof{/pgf/outer xsep}}%
+    \pgfmathsetlength{\pgf@yb}{\pgfkeysvalueof{/pgf/outer ysep}}%
+    \ifdim\pgf@xb<\pgf@yb
+      \advance\pgf@x\pgf@yb
+    \else
+      \advance\pgf@x\pgf@xb
+    \fi
+  }%
+  \inheritanchorborder[from=circle]%
+  \inheritanchor[from=circle]{north}%
+  \inheritanchor[from=circle]{north west}%
+  \inheritanchor[from=circle]{north east}%
+  \inheritanchor[from=circle]{center}%
+  \inheritanchor[from=circle]{west}%
+  \inheritanchor[from=circle]{east}%
+  \inheritanchor[from=circle]{mid}%
+  \inheritanchor[from=circle]{mid west}%
+  \inheritanchor[from=circle]{mid east}%
+  \inheritanchor[from=circle]{base}%
+  \inheritanchor[from=circle]{base west}%
+  \inheritanchor[from=circle]{base east}%
+  \inheritanchor[from=circle]{south}%
+  \inheritanchor[from=circle]{south west}%
+  \inheritanchor[from=circle]{south east}%
+  \anchor{two}{\twoanchor}%
+  \anchor{three}{\threeanchor}%
+  \anchor{four}{\fouranchor}%
+  \inheritbackgroundpath[from=circle]
+  \beforebackgroundpath{%
+    \pgfutil@tempdima=\radius
+    \pgfmathsetlength{\pgf@xb}{\pgfkeysvalueof{/pgf/outer xsep}}%  
+    \pgfmathsetlength{\pgf@yb}{\pgfkeysvalueof{/pgf/outer ysep}}%  
+    \ifdim\pgf@xb<\pgf@yb
+      \advance\pgfutil@tempdima by-\pgf@yb
+    \else
+      \advance\pgfutil@tempdima by-\pgf@xb
+    \fi
+    \advance\pgfutil@tempdima by-.5\pgflinewidth%
+    \pgfsetshortenstart{0pt}%
+    \pgfsetshortenend{0pt}%
+    \pgfsetarrows{-}%  
+    \pgfpathmoveto{\pgfpointadd{\centerpoint}{\pgfqpoint{-\pgfutil@tempdima}{0pt}}}%
+    \pgfpathlineto{\pgfpointadd{\centerpoint}{\pgfqpoint{\pgfutil@tempdima}{0pt}}}%
+    \pgfpathmoveto{\pgfpointadd{\centerpoint}{\pgfqpoint{0pt}{-\pgfutil@tempdima}}}%
+    \pgfpathlineto{\pgfpointadd{\centerpoint}{\pgfqpoint{0pt}{\pgfutil@tempdima}}}%
+    \pgfusepathqstroke
+  }%
+  \behindbackgroundpath{%
+    \pgfutil@tempdima=\radius
+    \pgfmathsetlength{\pgf@xb}{\pgfkeysvalueof{/pgf/outer xsep}}%  
+    \pgfmathsetlength{\pgf@yb}{\pgfkeysvalueof{/pgf/outer ysep}}%  
+    \ifdim\pgf@xb<\pgf@yb
+      \advance\pgfutil@tempdima by-\pgf@yb
+    \else
+      \advance\pgfutil@tempdima by-\pgf@xb
+    \fi
+    \advance\pgfutil@tempdima by-.5\pgflinewidth%
+    \ifpgfcirclecrosssplitcustomfill%
+      \pgf@lib@sh@rs@process@list{\pgf@lib@sh@ccs@list@fill}{4}%
+      {%
+        \pgfmathloop
+           \ifnum\pgfmathcounter>4%
+           \else%
+             \pgf@lib@sh@getalpha\pgf@lib@sh@rs@number{\pgfmathcounter}%
+              \edef\pgf@tempa{\csname pgf@lib@sh@rs@\pgf@lib@sh@rs@number @item\endcsname}%
+              \ifx\pgf@tempa\pgf@lib@sh@rs@nonetext\else
+                \pgfsetfillcolor{\pgf@tempa}%
+                \pgf@lib@sh@ccs@angles{\pgfmathcounter}%
+                \pgfpathmoveto{\centerpoint}%
+                \pgfpathlineto{\pgfpointadd{\centerpoint}{\pgfqpointpolar{\pgf@lib@sh@ccs@angle}{\pgfutil@tempdima}}}%
+                \pgfpatharc{\pgf@lib@sh@ccs@angle}{\pgf@lib@sh@ccs@angle@}{\pgfutil@tempdima}%
+                \pgfpathclose
+                \pgfusepathqfill
+              \fi
+        \repeatpgfmathloop
+      }%
+    \fi%
+  }%
+}
+\def\pgf@lib@sh@ccs@angles#1{%
+  \ifcase#1\or\def\pgf@lib@sh@ccs@angle{90}%
+           \or\def\pgf@lib@sh@ccs@angle{0}%
+           \or\def\pgf@lib@sh@ccs@angle{180}%
+           \else\def\pgf@lib@sh@ccs@angle{270}%
+  \fi
+  \edef\pgf@lib@sh@ccs@angle@{\number\numexpr\pgf@lib@sh@ccs@angle+90\relax}%
+}
+\makeatother
+
+\newcommand{\simon}[1]{\todo[color=green]{SR: #1}}
+\newcommand{\nitya}[1]{\todo[color=blue!30]{NM: #1}}
+\newcommand{\penghui}[1]{\todo[color=red!60]{HPH: #1}}
+\newcommand{\michael}[1]{\todo[color=yellow]{MW: #1}}
+\newcommand{\winnie}[1]{\todo[color=purple!60]{WL: #1}}
+\newcommand{\peter}[1]{\todo[color=pink]{PR: #1}}
+\newcommand{\jae}[1]{\todo[color=brown!60]{JL: #1}}
+\newcommand{\silas}[1]{\todo[color=orange]{SJ: #1}}
+
+\theoremstyle{plain}
+%\newtheorem{theorem}{Theorem}[section]
+%\newtheorem{corollary}{Corollary}[theorem]
+%\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lemma}[thm]{Lemma}
+%\newtheorem{cor}[thm]{Corollary}
+\newtheorem{cor}{Corollary}[thm]
+\newtheorem{conj}[thm]{Conjecture}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{heur}[thm]{Heuristic}
+\newtheorem{qn}[thm]{Question}
+\newtheorem{claim}[thm]{Claim}
+
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Definition}
+\newtheorem{cond}[thm]{Conditions}
+\newtheorem*{notn}{Notation}
+
+\theoremstyle{remark}
+\newtheorem{rem}[thm]{Remark}
+\newtheorem*{ex}{Example}
+\newtheorem*{nonex}{Nonexample}
+\newtheorem*{exer}{Exercise}
+
+\numberwithin{equation}{section}
+\numberwithin{thm}{section}
+
+\begin{document}
+
+
+\newenvironment{cenmath}
+{\begin{center}\begin{minipage}{\linewidth}\begin{eqnarray*}}
+{\end{eqnarray*}\end{minipage}\end{center}}
+
+\setlength{\parskip}{1em}
+
+
+
+\title{Introduction to measure theory and its application to machine learning research}
+\author{Brandon Yea}
+\address{Euler Circle, Mountain View, CA 94040}
+\email{brandon.nyea@gmail.com}
+\date{\today}
+\maketitle
+
+
+\section{\textbf{Abstract}}
+
+In this paper, we discuss basic concepts and tools of measure theory and their applications. The paper consists of two parts. In the first part, we start with the Riemann integral and discuss its limitation as a motivation to develop the theory of Lebesgue integral. After introducing basic concepts such as $\sigma$-algebra, Lebesgue measure, and measurable functions, we define Lebesgue integral in two different ways. One is to follow a similar idea used for deriving Riemann integral, but with the concept of a measurable partition. The other is a more popular approach where the integral of a simple function is introduced and the Lebesgue integral is obtained as its limiting case. We then derive and discuss useful theorems such as Monotone-Convergence Theorem, Fatou's Lemma, and Dominated-Convergence Theorem. Furthermore, building on the learned concepts and theorems of the Lebesgue integral, we define the $L^p$ space and introduce its basic properties and theorems. In the second part of the paper, as motivating examples of the usage of the theory, we discuss some of the recent machine learning research results on Deep Neural Networks (DNN) and Generative Adversarial Networks (GAN). For DNN, examples are discussed showing how the concepts and tools from the theory of measure and $L^p$ spaces introduced earlier can be used in analyzing and understanding its behavior in both qualitative and quantitative terms. For GAN, a unifying view of its numerous algorithmic variants is discussed where the concepts from measure theory are again leveraged such as push-forward measure, absolute continuity of measure, and the metrics quantifying the difference between measures. These examples clearly demonstrate that the concepts and tools from measure theory are instrumental to understanding and development of the algorithms in the burgeoning area of machine learning research.
+
+
+\section{\textbf{Introduction}}
+In this expository paper, we start with the basic concepts of measure theory and find out how they form the basis of understanding the concepts such as $L^p$ spaces and related tools of functional analysis. In addition, examples from recent machine-learning research are drawn in order to demonstrate the usefulness of the theory.
+
+The construction of the paper is as follows: Sections \ref{sec:motivation} through \ref{sec:LpSpace} constitute the first part of the paper, where basic ideas and tools of measure theory and functional analysis are introduced. In Section \ref{sec:motivation}, we show the limitation of Riemann integral and set the stage for derivation of Lebesgue-integral, which is a more flexible and general form of integral. Basic definitions and concepts are introduced regarding Lebesgue measure in \ref{sec:measure} followed by discussion of Lebesgue integral in Section \ref{sec:LebesgueIntegral}. Useful theorems such as Bounded Convergence Theorem, Fatou’s Lemma, and Monotone Convergence Theorem are derived and discussed. Based on the introduced Lebesgue measure and integral in the previous sections, we introduce the $L^p$ space and the basic concepts such as norm, inner-product and related properties in Section \ref{sec:LpSpace}. 
+
+%The $L^p$ spaces are function spaces with a certain way of measuring things called $L^p$ norms. For the functions in $L^p$ spaces, the $L^p$ norm is defined in terms of integral and we will use  Lebesgue-integrable functions obey  which can be used to understand their behaviors of in the $L^p$ space. 
+  
+%Using these tools and concepts, we will explore some basic properties of $L^p$ spaces such as the completeness, the Hölder and Minkowski inequalities. 
+
+In the second part of the paper, we explore some of the landscape of latest machine-learning research where the arsenal of measure-theoretic functional analysis plays a vital role in understanding and developing the underpinning theories that lead and support algorithmic progresses in the field.
+In Section \ref{sec:MLintro}, we briefly describe trends and major approaches in ML algorithm research. We then move on to specific examples where many concepts and tools from measure theory and functional analysis are leveraged. In Section \ref{sec:approxByDNN}, we first introduce some relevant results from measure theory and functional analysis and discuss examples of analyzing the Neural Network as a universal approximator. A similar effort is made in Section \ref{sec:GenerativeModels} where we discuss Generative Models which is arguably one of the most popular driving forces behind the recent rise of machine-learning technology. We conclude the paper in Section \ref{sec:conclusion}.
+
+\section{\textbf{Motivation of the Lebesgue Integral}}\label{sec:motivation}
+
+\subsection{Riemann Integral}
+
+Before defining the Riemann Integral, lets define the following:
+
+\begin{definition}
+    Partition
+\end{definition}
+
+A partition $P$ of the interval $[a, b]$ is a finite ordered set
+$P = \{x_0, x_1, x_2, \ldots, x_n\}$, where $a = x_0 < x_1 < x_2 < \ldots < x_n = b$.
+
+\begin{definition}
+
+\end{definition}
+\begin{enumerate}
+        \item \textbf{lower sum}:
+        The lower sum of $f$ with respect to the partition $P$, written $L(f,P)$, is
+\[ L(f,P) = \sum_{i=1}^{n} m_i(x_i - x_{i-1}). \]
+        \item \textbf{upper sum}:
+        The upper sum of $f$ with respect to the partition $P$, written $U(f,P)$, is
+\[ U(f,P) = \sum_{i=1}^{n} M_i(x_i - x_{i-1}). \]
+    \end{enumerate}
+ 
+Riemann Integrals are defined as the following:
+
+\begin{cenmath}
+\sum_{i=0}^{n-1} f(t_i)(x_{i+1}-x_i)
+\end{cenmath}
+
+Where $(x_{i+1}-x_i)$ represents the subintervals and $f(t_i)$ represents the corresponding function value for each interval. We say a function is \textbf{Riemann Integrable} if its \textbf{lower integral} and \textbf{upper integral} are equal. They are defined as the following:
+
+\begin{enumerate}
+    \item The lower integral of $f$ is
+    \begin{cenmath} 
+    \int_{a}^{b} f(x) \, dx = \sup_P L(f,P) = \sup\{L(f,P) \,|\, P \text{ is a partition of } [a, b]\}.
+    \end{cenmath}
+    
+    \item The upper integral of $f$ is
+    \begin{cenmath}
+    \int_{a}^{b} f(x) \, dx = \inf_P U(f,P) = \inf\{U(f,P) \,|\, P \text{ is a partition of } [a, b]\}.
+    \end{cenmath}
+\end{enumerate}
+
+Although Riemann Integrals can integrate most general functions, there are still numerous more that cannot. In general, discontinuous functions such as the Dirichlet function cannot be Riemann Integrable.
+
+The \textbf{Dirichlet function} is defined as the following:
+
+\[
+f(x) = \begin{cases}
+1 & \text{if } x \in \mathbb{Q}, \\
+0 & \text{if } x \notin \mathbb{Q}.
+\end{cases}
+\]
+
+and denoted as $\mathbb{X}_{\mathbb{Q}}(x)$.
+
+Note how for an interval $(0,1)$, the upper and lower integral are different, where the lower integral from $(0,1)$ is 0 and the upper integral from $(0,1)$ is 1. Thus, it can't be Riemman integrated. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% [TBD] Add Dirichlet function example 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+To address such problems like the Dirichelt function, we need to extend the scope of functions that can be integrated, where the concept of Lebesgue Integrals is needed. Lebesgue integrals, which if intuitively thought, can be thought as instead of looking at the domain first, we look at the function values and then look at the corresponding domain of each function value. Here is a quick diagram of a Lebesgue Integral versus a Riemann Integral. 
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=10cm]{lebesgue_sum_fixed_dt}
+    \caption{Lebesgue Integral}
+    \label{fig:Lebesgue Integral}
+\end{figure}
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=10cm]{Riemann_Integration_5}
+    \caption{Riemann Integral}
+    \label{fig:Riemann Integral}
+\end{figure}
+
+However, before we define Lebesgue integrals, we will need to know some basic measure theory.
+
+\section{\textbf{Basic Measure Theory}}\label{sec:measure}
+%\subsection{Measure spaces}
+
+We need sigma algebra in order for sets to have measures and be well defined.
+
+\begin{definition}
+\textbf{Algebra}
+
+Let $X$ be a nonempty set. A collection of subsets of $X$, $S$ is called an algebra of sets on $X$ if 
+\begin{enumerate}
+    \item $\emptyset \in S$.
+    \item if $A,B \in S$, then $A \cup B \in S$, and
+    \item if $A \in S$, then $A^c = X \setminus A \in S$.
+\end{enumerate}
+\end{definition}
+
+\begin{definition}
+\textbf{$\sigma$-algebra}
+
+Let $X$ be a nonempty set. A collection $\Sigma$ of subsets of $X$ is called a $\sigma$-algebra of sets on $X$ if 
+\begin{enumerate}
+    \item [(i)] $X \in \Sigma$ and $\varnothing \in \Sigma$.
+    \item [(ii)] If $B \in \Sigma$, then $X \setminus B \in \Sigma$, i.e., the complement of $B$ in $X$ is also in $\Sigma$.
+    \item [(iii)] Any countable intersection or union of elements of $\Sigma$ is also in $\Sigma$.
+\end{enumerate}
+\end{definition}
+
+ Here are some examples of $\sigma$-algebra:
+ \begin{itemize}
+    \item Given a finite set $X = \{a, b, c, d\}$, then $\Sigma = \{\varnothing, \{a, b\}, \{c,d\}, X\}$ is a $\sigma$-algebra.
+    \item $\mathcal{P}(X)$ is a $\sigma$-algebra for any set $X$.
+\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
+\begin{definition}
+    Let $S={I_k}$ be a countable collection of closed intervals in $R^n$. We say $S$ is a \textbf{covering of $A$ by closed intervals} if $A \subseteq \bigcup I_k$ and set $\sigma (S) = \sum v(I_k)$, where $v(I_k)$ represents the volume of $I_k$.
+\end{definition}
+  
+\begin{definition}
+Let $A \subseteq R^n$. The \textbf{Lebesgue outer measure} of $A$ is 
+\begin{equation*}
+m^*(A) = \inf \left\{\sigma(S) \, \middle| \, S \text{ is a covering of } A \text{ by closed intervals} \right\}
+\end{equation*}
+\end{definition}
+
+Its properties include the following:
+
+\begin{itemize}
+    \item $m^*(A) \geq 0$ for any $A \subseteq \mathbb{R}$, and $m^*(\emptyset) = 0$.
+    \item For any two sets $A$ and $B$, $m^*(A \cup B) \leq m^*(A) + m^*(B)$.
+    \item Given any set $A$ and any given $\epsilon > 0$, there is a covering $S$ of $A$ by closed intervals such that $\sigma(S) \leq m^*(A) + \epsilon$.
+    \item If $A \subseteq B \subseteq R^n$, then $m^*(A) \leq m^*(B)$.
+    \item For any countable collection of sets $\{A_n\}$,
+    $m^*(\bigcup A_n) \leq \sum m^*(A_n)$.
+\end{itemize}
+\fi 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{definition}
+\textbf{Outer measure}
+
+Let $X$ be a set. An \textbf{outer measure} on $X$ is a function $\mu^* : P(X) \mapsto [0,+\infty]$ such that 
+\begin{itemize}
+  \item [(i)] $\mu^*(\emptyset) = 0$.
+  \item [(ii)] if $A \subseteq B$, then $\mu^*(A) \leq \mu^*(B)$, and
+  \item [(iii)] if ${A_j}$ is a countable collection of subsets of $X$, then 
+  \begin{equation*}
+      \mu^*(\bigcup_j A_j ) \leq \sum_{j}\mu^*(A_j)
+  \end{equation*}
+\end{itemize} 
+\end{definition}
+One limitation of the Lebesgue outer measure can be seen in its second property, called sub-additivity. Unlike conventional Euclidean measure systems such as distances, the Lebesgue outer measure of the union of two disjoint sets is not always equal to the sum of the outer measures of the two disjoint sets.
+
+\begin{definition}
+\textbf{Measurable space}
+
+    A \textbf{measurable space} is a pair $(X,\Sigma)$ consisting of a set $X$ and a $\sigma$-algebra $\Sigma$. A subset $A$ of $X$ is called \textbf{measurable} if $A \in \Sigma$.
+\end{definition} 
+
+%\subsection{Measure}
+%\subsubsection{\textbf{Lebesgue Measure}}
+
+\begin{definition}
+\textbf{Measure}
+
+A \textbf{measure} on a measurable space $(X,\Sigma)$ is a function $\mu: \Sigma \mapsto [0,+\infty]$ such that
+    \begin{itemize}
+        \item [(i)] $\mu(\emptyset)$ = 0 and         
+        \item [(ii)] for any countable collection $\{E_j \}$ of pairwise disjoint sets in $\Sigma$,
+        \begin{equation*}
+            \mu(\bigcup_j E_j ) = \sum_j \mu(E_j).            
+        \end{equation*}
+    \end{itemize}
+    The triple $(X,\Sigma,\mu)$ is called a measure space.
+\end{definition}
+Due to the limitation of the outer measure, Lebesgue wanted to put a limit to the Lebesgue outer measure.
+
+
+%We say a set $E$ is Lebesgue Measurable if it satisfies the %\textbf{Carathéodory's criterion}.
+
+\begin{definition}
+\textbf{Carathéodory's criterion}
+
+Let $\mu^*$ be an outer measure on a set $X$. A set $E \subseteq X$ is called $\mu^*$-measurable if for every set $A \subseteq X$, 
+\begin{equation*}
+    \mu^*(A) = \mu^*(A \cap E) + \mu^*(A\setminus E).
+\end{equation*}
+\end{definition}
+
+\begin{thm}
+\textbf{Measure space}
+
+    Let $\mu^*$ be an outer measure on $X$ and $\Sigma$ be the collection of all $\mu^*$-measurable sets. Define $\mu : \Sigma \mapsto [0,\infty]$ by $\mu(E)$=$\mu^*(E)$. Then $(X,\Sigma,\mu)$ is a measure space.
+\end{thm}
+
+\begin{definition}[Complete measure space]
+%\textbf{Measure space}
+   A measure space $(X,B,\mu)$ is a complete measure space if whenever $C \in B$ with $\mu(C) =0$ and $A \subseteq C$, then $A \in B$.
+\end{definition}
+
+\begin{definition} 
+\textbf{Lebesgue Measure}
+    Let $E \subseteq R^n$. $E$ is Lebesgue measurable if and only if for any $A \subseteq R^n$,
+    \begin{equation*}
+        m^*(A) = m^*(A \cap E) + m^*(A \setminus E),
+    \end{equation*}
+\end{definition}
+ where $m^*$ is Lebesgue outer measure. In this case, the Lebesgue-measurable sets form a $\sigma$-algebra and the Lebesgue outer measure $\lambda^*(m)$ will be equal to its \textbf{Lebesgue measure} $\lambda(m)$. 
+
+%A set $E \subseteq \mathbb{R}^n$ is Lebesgue measurable if for every $A$ in $\mathbb{R}$,
+%\[
+%\lambda^*(A) = \lambda^*(A \cap E) + \lambda^*(A \cap E^c),
+%\]
+%where $\lambda^*(A)$ denotes the Lebesgue outer measure of $A$.
+Some properties of Lebesgue measures are the following:
+
+\begin{itemize}
+    \item The Lebesgue measure of the union of two disjoint sets is equal to the sum of the Lebesgue measures of the two disjoint sets.
+    \item If $A$ is Lebesgue measurable, so is its complement.
+    \item The Lebesgue measure is non-negative.
+    \item Countable unions and intersections of Lebesgue-measurable sets are Lebesgue-measurable.
+\end{itemize}
+
+
+Now, we can finally define Lebesgue Integrals.
+
+\section{\textbf{Lebesgue Integral}}\label{sec:LebesgueIntegral}
+Continuous functions work well with Riemann integration even though not all Riemann integrable functions are continuous. With Lebesgue integration, we deal with a different, larger set of functions. We will show two routes one can take to define the Lebesgue integral. One is to follow a similar argument used in deriving Riemann Integral with the concept of 'measurable partitions' and the other is to define it as a limiting case of the integral of a simple function.  
+
+%\subsection{Measurable functions}
+\begin{definition}
+\textbf{Lebesgue measurable function}
+
+Let $f$ be defined on $I=[a,b]$. We say $f$ is \textbf{Lebesgue measurable} on $I$ if for every $s \in R$ the set $\{ x \in I | f(x) > s \}$ is a Lebesgue measurable set. 
+\end{definition}
+ 
+%\begin{definition}
+%\textbf{Lebesgue Measure Zero}
+%
+%A subset $\mathcal{N}$ of $\mathbb{R}$ has Lebesgue measure zero if and only if: Given any positive number $\varepsilon$, there is a sequence $I_1, I_2, \ldots$ of intervals in $\mathbb{R}$ such that $\mathcal{N}$ is contained in the union of the $I_1, I_2, \ldots$ and the total length of the union is less than $\varepsilon$. 
+%\end{definition}
+
+%\newtheorem*{ex}{Example}
+%Any countable set has measure zero. 
+%\begin{proof}
+%Let $x_i$ be a sequence of countable sets and let $X_i$ = $(x_i-2^{-i-1}\epsilon, x_i+2^{-i-1}\epsilon)$. 
+%Then, $X \subseteq \bigcup x_i \leq \sum 2^{-i} \epsilon = \epsilon$
+%\end{proof}
+
+\begin{definition}
+\textbf{Equal Almost Everywhere}
+
+We say $f$ equals $g$ almost everywhere on $I$, written $f(x) = g(x)$ a.e. or $f = g$ a.e., if the set $\{x \in I \,|\, f(x) \neq g(x)\}$ has Lebesgue measure 0.
+\end{definition}
+%This property is useful later for defining $L^p$ norms.
+
+
+
+
+
+
+\subsection{Approach via measurable partitions}
+
+We first investigate the Lebesgue integral on the set of bounded functions on a closed interval $[a,b]$ --- denoted as \textbf{$B[a,b]$} --- and extend it to unbounded ones later.
+
+\begin{definition}
+    \textbf{Measurable partition}
+
+A measurable partition of $[a, b]$ is denoted as $P = \{E_j\}_{j=1}^n$, which represents a finite collection of subsets of $[a, b]$ with the following properties:
+\begin{enumerate}
+  \item[(i)] $E_j$ is a measurable set for each j.
+  \item[(ii)]$\bigcup_{j=1}^n E_j$ $=[a,b]$,
+  \item[(iii)] $m(E_i \cap E_{j}) = 0$ for $i \neq j$, 
+\end{enumerate}
+\end{definition}
+
+In summary, a measurable partition of $[a, b]$ is a collection of measurable sets that covers the interval completely, and any pairwise intersections between distinct sets have Lebesgue measure zero. Note we are partitioning $[a,b]$ into measurable sets instead of subintervals as done in Riemann integration.
+
+\begin{definition}
+\textbf{Upper-sum and lower-sum }    
+
+Let $f \in B[a,b]$ and $P=\{ E_j \}_{j=1}^n$ be a measurable partition of $[a,b]$. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
+We define the upper and lower Lebesgue integrals, respectively, as
+\[
+U^*(f)_L = \int_E \sup\{\phi(x) \, dx : \phi \text{ is simple and } \phi \geq f\},
+\]
+\[
+L^*(f)_L = \int_E \inf\{\phi(x) \, dx : \phi \text{ is simple and } \phi \leq f\}.
+\]
+If $U^*(f)_L = L^*(f)_L$, then the function $f$ is called Lebesgue integrable over set $E$, and the Lebesgue integral of $f$ over set $E$ is denoted by
+\[
+\int_E f(x) \, dx.
+\]
+\fi 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{itemize}
+    \item [(i)] The upper sum $U[f,P]$ is
+    \begin{equation*}
+        U[f,P]=\sum_{j=1}^n M_j m(E_j),
+    \end{equation*}
+    where $M_j=\sup_{x \in E_j} f(x)$
+    \item [(i)] The lower sum $L[f,P]$ is
+    \begin{equation*}
+        L[f,P]=\sum_{j=1}^n m_j m(E_j),
+    \end{equation*}
+    where $m_j=\inf_{x \in E_j} f(x)$
+\end{itemize}
+\end{definition}
+
+\begin{definition}
+\textbf{Lebesgue Integral defined with Upper-integral and lower-integral}    
+Let $f \in B[a,b]$.
+\begin{itemize}
+    \item [(i)] The upper integral is defined as:
+    \begin{equation*}
+        \overline{\int _{a}^{b}}f = \inf_{P \in \mathcal{P}} U[f,P] 
+    \end{equation*}
+    \item [(ii)] The lower integral is defined as:
+    \begin{equation*}
+        \underline{\int_{a}^{b}}f = \sup_{P \in \mathcal{P}} L[f,P] 
+    \end{equation*}
+     \item [(iii)] If $\overline{\int_{a}^{b}}f = \underline{\int_{a}^{b}}f$, we say $f$ is Lebesgue integrable and denote the Lebesgue integral as:
+     \begin{equation*}
+         \int_{a}^{b}f = \overline{\int_{a}^{b}}f = \underline{\int_{a}^{b}}f
+     \end{equation*}    
+\end{itemize}
+where $\mathcal{P}$ denotes the collection of all possible measurable partitions, or $\mathcal{P}$=$\{P| P$ is a measurable partition of $[a,b]\}$.
+\end{definition}
+
+
+
+\iffalse
+\begin{thm}
+Let $f \in B[a,b]$. If $f$ is Riemann integrable on $[a,b]$, then $f$ is Lebesgue integrable on $[a,b]$.
+\end{thm}
+
+\begin{thm}
+Let $f \in B[a,b]$. If $f$ is measurable on $[a,b]$, then $f$ is Lebesgue integrable on $[a,b]$.    
+\end{thm}
+\begin{thm}
+Let $f \in B[a,b]$. If $f$ is Lebesgue integrable on $[a,b]$, then $f$ is measurable on $[a,b]$.    
+\end{thm}
+\fi
+
+Up to this point, we have only considered bounded functions. We will define the Lebesgue integral for unbounded functions.
+
+\begin{definition}
+    Let f be an unbounded function defined on $[a,b]$.  
+\end{definition}
+(i) Suppose $f(x) \geq 0$ for all $x \in [a, b]$. For $N > 0$ define
+\begin{center}
+$f^N(x) = \begin{cases} 
+      f(x) & \text{if } f(x) \leq N, \\
+      N & \text{otherwise}.
+   \end{cases}$
+   \end{center}
+We say $f$ is Lebesgue integrable on $[a, b]$ if $f^N$ is Lebesgue
+integrable for all $N > 0$ and \begin{cenmath}
+    \lim_{N\to+\infty} \int_a^b f^N
+\end{cenmath} is finite. In
+this case $\int_a^b f$ is defined to be
+$\int_a^b f = \lim_{N\to+\infty} \int_a^b f^N$.
+
+(ii) Suppose $f(x) < 0$ for some $x \in [a, b]$. 
+\begin{cenmath}
+  f^+(x) = \begin{cases} 
+      f(x) & \text{if } f(x) \geq 0, \\
+      0 & \text{otherwise}.
+   \end{cases} \text{and }  
+  f^-(x) = \begin{cases} 
+      -f(x) & \text{if } f(x) < 0, \\
+      0 & \text{otherwise}.
+   \end{cases}
+\end{cenmath}
+
+We say $f$ is Lebesgue integrable on $[a, b]$ if both $f^+$ and
+$f^-$ are Lebesgue integrable on $[a, b]$. In this case, we denote $\int_a^b f $ as \begin{cenmath}
+     \int_a^b f = \int_a^b f^+ - \int_a^b f^-.
+\end{cenmath}
+
+\begin{definition}
+    $\mathcal{L}[a,b]$
+    
+The set of Lebesgue integrable functions on $[a,b]$ is defined as:
+\begin{equation*}
+    \mathcal{L}[a,b] = \{ f | f \text{ is Lebesgue integraable on } [a,b] \}.
+\end{equation*}
+\end{definition}
+\begin{lemma}\label{lemma0ForDCT}
+Let $E$ be a measurable subset of $[a,b]$.
+Let $f \in \mathcal{L}[a,b]$. Given any $\epsilon > 0$, there exists a $\delta >0$ such that
+\begin{equation*}
+    \text{if} \quad m(E) < \delta, \quad \text{then} \quad |\int_E f | < \epsilon.
+\end{equation*}
+where $m(E)$ represents a Lebesgue measure for the set $E$.
+\end{lemma}
+
+\begin{lemma}\label{lemmaForDCT}
+    Let $g \in \mathcal{L}[a,b]$. Suppose $f$ is measurable and $|f(x)| \leq g(x)$ almost everywhere in $[a,b]$. Then $f \in \mathcal{L}[a,b]$.
+\end{lemma}
+
+\begin{thm}
+\textbf{Dominated Convergence theorem} 
+
+Let $\{f_n\}$ be a sequence of measurable functions on $[a,b]$ such that 
+\begin{equation*}
+    \lim_{n \to \infty} f_{n}(x) = f(x) \text{ a.e.}
+\end{equation*}
+on $[a,b]$. If there exists $g \in \mathcal{L}[a,b]$ such that
+\begin{equation*}
+    |f_n(x)| \leq g(x) \text{ a.e.}
+\end{equation*}
+for every $n$, then we have $f_n(x) \in \mathcal{L}[a,b]$ for every $n$, $f \in \mathcal{L}[a,b]$, and 
+\begin{equation*}
+    \lim_{n \to \infty} \int_{a}^{b} f_n = \int_{a}^b f.
+\end{equation*}
+\end{thm}
+\begin{proof}
+    Since $\lim_{n \to \infty} f_n(x) = f(x)$ a.e. and $|f_n(x)| \leq g(x)$ a.e. on $[a,b]$, we have
+    \begin{equation*}
+        |f(x)| \leq g(x) a.e.
+    \end{equation*}
+    on $[a,b]$. Hence by Lemma \ref{lemmaForDCT}, $f_n \in \mathcal{L}[a,b]$ for every $n$ and $f \in \mathcal{L}[a,b,]$. It remains to show that 
+    \begin{equation*}
+        \lim_{n \to \infty} \int_a^b f_n = \int_a^b f.
+    \end{equation*}
+    WLOG, we may assume that $\lim_{n \to \infty}f_n(x)=f(x)$ for all $x \in [a,b]$. Let $\epsilon>0$ be given. We mist show there exists an $N$ such that if $n>N$, then 
+    \begin{equation*}
+        |\int_a^bf_n - \int_a^bf| < \epsilon.        
+    \end{equation*}
+
+    The idea is to create subsets of $[a,b]$ where the sequence of function is almost converging uniformly. To do this, for each positive integer $n$, set 
+    \begin{equation*}
+        A_n = \{ x \in [a,b] | |f_k(x)-f(x)| < \frac{\epsilon}{2(b-a)} \quad \text{for all} \quad k \leq n \}.
+    \end{equation*}
+    By definition, we have
+    \begin{equation*}
+        A_1 \subseteq A_2 \subseteq A_3 \subseteq ...
+    \end{equation*}
+    and
+    \begin{equation*}
+        \bigcup_{k=1}^{\infty} A_k \subseteq [a,b].
+    \end{equation*}
+    But for each $x \in [a,b]$, $\lim_{n \to \infty} f_n(x) = f(x)$. Therefore, for each $x$, there is an $N$ such that whenever $k\leq N$, then $|f_k(x)-f(x)| < \frac{\epsilon}{2(b-a)}$. In other words, for each $x \in [a,b]$, there is an $N$ such that $x \in A_N.$ Hence,
+    \begin{equation*}
+        \bigcup_{k=1}^\infty A_k = [a,b].
+    \end{equation*}
+    In addition, we have
+    \begin{equation*}
+        \int_{A_n} |f_n -f| \leq \int_{A_n} \frac{\epsilon}{2(b-a)} = m(A_n)\frac{\epsilon}{2(b-a)} \leq \frac{\epsilon}{2}.
+    \end{equation*}
+    Set $E_n = [a,b] \ A_n$ so that 
+    \begin{equation*}
+        E_1 \supseteq E_2 \supseteq E_3 \supseteq ...
+    \end{equation*}
+    and 
+    \begin{equation*}
+        \bigcap_{n=1}^\infty E_n =\emptyset.
+    \end{equation*}
+    Thus, $\lim_{n \to \infty} m(E_n) =0$.
+    By Lemma \ref{lemma0ForDCT}, there exists a $\delta>0$ so that $\int_E g < \frac{\epsilon}{4}$ whenever $m(E) < \delta$. Since $|f_n(x)|\leq g(x)$ and $|f(x)| \leq g(x)$, if $m(E) < \delta$, it will also be the case that
+    \begin{equation*}
+        \int_E |f_n| < \frac{\epsilon}{4} \quad \text{for all} \quad n, \text{and} \int_E |f|<\frac{\epsilon}{4}.
+    \end{equation*}
+    Since $\lim_{n \to \infty} m(E) =0$, there exists $N$ such that if $n > N$, then $m(E_n) < \delta$. Thus, if $n>N$, we have
+
+\begin{equation*}
+    \begin{aligned}
+        |\int_a^b f_n -\int_a^b f | &= |\int_a^b (f_n -f) | \\
+        &= |\int_{A_n} (f_n -f ) | + |\int_{E_n} (f_n -f ) | \\
+        &\leq \int_{A_n}|f_n-f| + \int_{E_n}|f_n-f| \\
+        &\leq \int_{A_n}\frac{\epsilon}{2(b-a)} + \int_{E_n}|f_n| + \int_{E_n} |f| \\
+        & < \frac{\epsilon}{2} + \frac{\epsilon}{4} + \frac{\epsilon}{4} = \epsilon.
+    \end{aligned} 
+\end{equation*}
+    
+\end{proof}
+
+
+\begin{thm}
+\textbf{Fatou's Lemma}
+
+Let $\{ f_n \}$ be a sequence of non-negative functions in $\mathcal{L}[a,b]$. Suppose $\liminf_{n \to \infty} f_n(x) = f(x)$ a.e. in $[a,b]$, we have : 
+\begin{itemize}
+    \item [(i)] If $f \in \mathcal{L}[a,b]$, then $\lim_{ n \to \infty} \int_a^b f_n = \int_a^b f$.
+    \item [(ii)] If $f \notin \mathcal{L}[a,b]$, then $\lim_{ n \to \infty} \int_a^b f_n = + \infty$. 
+\end{itemize}    
+\end{thm}
+ \begin{proof}
+     For each positive integer $n$, let $g_n(x) = \inf_{k \geq n} f_k(x)$. Then $g_n$ is nonnegative and measurable for each $n$. Also, by Lemma $2.4.5$, for each $n$, $g_n \in L[a, b]$ since $g_n(x) \leq f_n(x)$. Thus,
+\[ \int_{a}^{b} g_n \leq \int_{a}^{b} f_n \]
+for each $n$. Consequently,
+\[ \liminf_{n \to \infty} \int_{a}^{b} g_n \leq \liminf_{n \to \infty} \int_{a}^{b} f_n. \]
+On the other hand, $\lim_{n \to \infty} g_n(x) = \liminf_{n \to \infty} f_n(x) = f(x)$ a.e. Therefore, by our preliminary version of Fatou’s Lemma, Theorem $2.4.10$, if $f \in L[a, b]$, then
+\[ \int_{a}^{b} f \leq \liminf_{n \to \infty} \int_{a}^{b} g_n \leq \liminf_{n \to \infty} \int_{a}^{b} f_n. \]
+Thus, we have established part (i). If $f \notin L[a, b]$, then
+\[ \liminf_{n \to \infty} \int_{a}^{b} g_n = +\infty. \]
+In this case,
+\[ \liminf_{n \to \infty} \int_{a}^{b} f_n = +\infty, \]
+and we have part (ii).
+ \end{proof}
+\begin{thm}
+\textbf{Monotone convergence theorem}
+
+Let $\{ f_n \}$ be a sequence of nonnegative functions in $\mathcal{L}[a,b]$. Suppose $\{f_n(x) \}$ is an increasing sequence for almost every $x \in [a,b]$ and $\lim_{n \to \infty} f_n(x) = f(x)$ a.e. in $[a,b]$.
+\begin{itemize}
+    \item [(i)] If $f \in \mathcal{L}[a,b]$, then $\lim_{n \to \infty} \int_a^b f_n = \int_a^b f$.
+    \item [(ii)] If $f \notin \mathcal{L}[a,b]$, then $\lim_{n \to \infty} \int_a^b f_n = +\infty$.
+\end{itemize}
+\end{thm}
+
+\begin{proof}
+    For each $n$, $f_n(x) \leq f_{n+1}(x)$ almost everywhere in $[a, b]$. Consequently, $f_n \leq f$ a.e. in $[a, b]$. Therefore, if $f \in L[a, b]$, we may use $|f|$ as the dominating function in the Lebesgue Dominated Convergence Theorem to establish part (i).
+To prove part (ii), note that
+\[ \int_{a}^{b} f_n \leq \int_{a}^{b} f_{n+1} \]
+for all $n$. Thus, $\{\int_{a}^{b} f_n\}$ is an increasing sequence of numbers. Moreover,
+\[ \inf_{k \geq n} \int_{a}^{b} f_k = \int_{a}^{b} f_n. \]
+Hence,
+\[ \liminf_{n \to \infty} \int_{a}^{b} f_n = \lim_{n \to \infty} \int_{a}^{b} f_n. \]
+Therefore, part (ii) follows from part (ii) of Fatou’s Lemma.
+
+\end{proof}
+\subsection{Approach via simple function}
+\begin{definition}
+    An extended real-valued function on $X$ is $\mathcal{X}$-measurable in case the set $\{ x \in X: f(x) > \alpha \}$ belongs to $X$ for each real number $\alpha$. The collection of all extended real-valued $\mathcal{X}$-measurable functions on $X$ is denoted by $M(X,\mathcal{X})$. In case the functions take only non-negative values, it is denoted by $M^+$. 
+\end{definition}
+%\begin{definition}
+%    Denote the collection of all $\mathcal{X}$-measurable functions on $X$ to $\bar{R}$ by $M = M(X,\mathcal{X})$ and the collection of all non-negative $\mathcal{X}$-measurable functions on $X$ to $\bar{R}$ by $M^+ = M^+(X,\mathcal{X})$. 
+%\end{definition}
+
+\begin{definition}
+\textbf{Simple function}
+ 
+The \textbf{simple function} $\phi$ is defined as the linear combination of \textbf{indicator functions} where the indicator function is defined as
+
+\[
+\mathbf{1}_{A}(x) := \begin{cases}
+1 & \text{if } x \in A, \\
+0 & \text{if } x \notin A.
+\end{cases}
+\]
+
+The simple function is denoted as: \\
+\[
+f(x)=\sum _{{k=1}}^{n}a_{k}{{\mathbf  1}}_{{A_{k}}}(x),
+\]
+\end{definition} 
+\begin{lemma} \label{lem:3.4Bartle}
+    Let $\mu$ be a measure defined on a $\sigma$-algebra $X$.
+    (a) If $\{E_n\}$ is an increasing sequence in $X$, then
+    \begin{equation*}
+        \mu(\bigcup_{n=1}^\infty E_n) = \lim \mu(E_n).
+    \end{equation*}
+    (b) If $\{ F_n \}$ is a decreasing sequence in $X$ and if $\mu(F_1) < +\infty$, then 
+    \begin{equation*}
+        \mu(\bigcap_{n=1}^\infty F_n) = \lim \mu(F_n).
+    \end{equation*}
+\end{lemma}
+\begin{lemma} \label{lem:4.3Bartle}
+    (a) If $\varphi$ and $\phi$ are simple functions in $M^+(X,\mathcal{X})$ and $c \geq 0$, then
+    \begin{equation*}
+        \begin{aligned}
+            \int c \varphi d\mu & = c \int \varphi d\mu, \\
+            \int (\varphi + \psi)d\mu &= \int \varphi d\mu + \int \psi d\mu.
+        \end{aligned}
+    \end{equation*}
+    (b) If $\lambda$ is defined for $E$ in $\mathcal{X}$ by
+    \begin{equation*}
+        \lambda(E) = \int \varphi_{\chi_E}d\mu,
+    \end{equation*}
+    then $\lambda$ is a measure on $\mathcal{X}$.
+\end{lemma}
+
+\begin{lemma} \label{lem:4.5Bartle}
+    (a) If $f$ and $g$ belong to $M^+(X,\mathcal{X})$ and $f \leq g$, then
+    \begin{equation*}
+        \int f d\mu \leq \int g d\mu.
+    \end{equation*}
+    (b) If $f$ belongs to $M^+(X,\mathcal{X})$, if $E$,$F$ belong to $X$,, and if $E \subset F$, then
+    \begin{equation*}
+        \int_E f d\mu \leq \int_F f d\mu.
+    \end{equation*}
+\end{lemma}
+\begin{cor} \label{cor:2.10Bartle}
+    If $\{f_n \}$ is a sequence in $M(X,\mathcal{X})$ which converges to $f$ on $X$, then $f$ is in $M(X,\mathcal{X})$.
+\end{cor}
+\begin{thm}
+    Let $(X,B,\mu)$ be a measure space. Given a nonnegative measurable function $f : X \to R \cup \{ +\infty \}$ there exists a sequence of nonnagative simple functions $\{\phi_n \}$ such that
+    \begin{equation*}
+        \lim_{n \to \infty} \phi_n(x) = f(x)
+    \end{equation*}
+for all $x \in X$.
+\end{thm}
+
+\begin{cor}
+    Let $(X,B,\mu)$ be a measure space. For any measurable function $f$, there exists a sequence of simple functions $\{\phi_n \}$ such that
+    \begin{equation*}
+        \lim_{n \to \infty} \phi_n(x) = f(x)
+    \end{equation*}
+for all $x \in X$.
+\end{cor}
+ 
+In the sequel, we will assume $(X,B,\mu)$ denotes a complete measure space.
+\begin{definition}
+    Let $\phi: X \to R$ be a nonnagative simple function defined as:
+    \begin{equation*}
+        \phi() = \sum_{i=1}^n a_i 1_{E_i}(x),
+    \end{equation*}
+   where $a_i \in R$ and $E_i \in B$ for each $i$ and the sets $E_i$ are pairwise disjoint. The integral of $\phi$ with respect to the measure $\mu$, written as $\int \phi d\mu$, is
+   \begin{equation*}
+       \int_X \phi d\mu = \sum_{x=1}^n a_i \mu(E_i).
+   \end{equation*}
+\end{definition}
+
+Based on the above, we define the integral of nonnegative functions.
+\begin{definition}
+    Let $f: X \to R \cup \{ +\infty \}$ be a nonnegative measurable function. The integral of $f$ with respect to the measure $\mu$ is given as:
+    \begin{equation*}
+        \int_X f d\mu = \sup\{\int\phi  d\mu  \mid  \phi \text{  is a simple function with  } 0 \leq \phi \leq f \}.
+    \end{equation*}
+ If this value is finite, we say $f$ is integrable with respect to $\mu$.
+\end{definition}
+\begin{definition}
+    Let $f: X \to \bar{R}$ be a measurable function. We say $f$ is integrable with respect to $\mu$ if both $f^+$ and $f^-$ are integrable with repect to $\mu$. Here $f^+$ and $f^-$ are the positive and negative parts of $f$, respectively. The integral of $f$ with respect to the measure $\mu$ is
+    \begin{equation*}
+        \int_{X} f d\mu = \int_X f^+ d\mu - \int_X f^- d\mu.
+    \end{equation*}
+\end{definition}
+
+Now, we are prepared to define another theorem: 
+
+\begin{thm}{Monotone Convergence Theorem}
+    If $(f_n)$ is a monotone increasing sequence of functions in $M^+(X, \mathcal{X})$ which converges to $f$, then 
+\begin{equation} \label{eqn:MCT}
+\int f \, d\mu = \lim_{n \to \infty} \int f_n \, d\mu.
+\end{equation}
+\end{thm}
+\begin{proof}
+   According to Corollary \ref{cor:2.10Bartle}, the function $f$ is measurable. Since $f_n \leq f_{n+1} \leq f$, it follows from Lemma \ref{lem:4.5Bartle}(a) that
+   \begin{equation*}
+       \int f_n d\mu \leq \int f_{n+1}d\mu \leq \int f d\mu
+   \end{equation*}
+   for all $n \in N$. Therefore we have
+   \begin{equation*}
+       \lim \int f_n d\mu \leq \int f d\mu.
+   \end{equation*}
+   To establish the opposite inequality, let $\alpha$ be a real number satisfying $0 < \alpha < 1$ and let $\varphi$ be a simple measurable function satisfying $0 \leq \varphi \leq f$. Let 
+   \begin{equation*}
+       A_n = \{ x \in \mathcal{X} : f_n(x) \geq \alpha \varphi(x) \}
+   \end{equation*}
+   so that $A_n \in \mathcal{X}$, $A_n \subset A_{n+1}$, and $X = \bigcup A_n$. According to Lemma \ref{lem:4.5Bartle}, we have
+   \begin{equation} \label{eqn:4.7ofBartle}
+       \int_{A_n} \alpha \varphi d\mu \leq \int_{A_n} f_n d\mu \leq \int f_n d\mu.   \end{equation}
+       Since the sequence $\{A_n\}$ is monotone increasing and has union $X$, it follows from Lemmas \ref{lem:4.3Bartle}(b) and \ref{lem:3.4Bartle}(a) that
+       \begin{equation*}
+           \int \varphi d\mu = \lim \int_{A_n} \varphi d\mu.
+       \end{equation*}
+       Therefore, by  taking the limit in (\ref{eqn:4.7ofBartle}) with respect to $n$, we obtain
+       \begin{equation*}
+           \alpha \int \varphi d\mu \leq \lim \int f_n d\mu.
+       \end{equation*}
+       Since this holds for all $\alpha$ with $0 <\alpha<1$, we infer that
+       \begin{equation*}
+           \int \varphi d\mu \leq \lim \int f_n d\mu
+       \end{equation*}
+       and since $\varphi$ is an arbitrary simple function in $M^+$ satisfying $0 \leq \varphi \leq f$, we conclude that
+       \begin{equation*}
+           \int f d\mu = \sup_{\varphi} \int \varphi d\mu \leq \lim \int f_n d\mu.
+       \end{equation*}
+       If we combine this with the opposite inequality, we obtain (\ref{eqn:MCT}).
+\end{proof}
+ 
+\begin{thm}{Fatou's Lemma}
+
+If \(f_n\) belongs to \(M^+(X, X)\), then 
+\[ 
+\int (\liminf f_n) d\mu \leq \liminf \int f_n d \mu
+\]
+\end{thm}
+\begin{proof}
+    Let $g_m = \inf \{f_n,f_{m+1},...\}$ so that $g_m \leq f_m$ whenever $m \leq n$. Therefore we have
+    \begin{equation*}
+        \int g_m d\mu \leq \int f_n d\mu \text{, }  m \leq n ,
+    \end{equation*}
+    so that
+    \begin{equation*}
+        \int g_m d\mu \leq \liminf \int f_n d\mu.
+    \end{equation*}
+    Since the sequence $\{g_m\}$ is increasing and converges to $\liminf f_n$, the Monotone Convergence Theorem implies that 
+    \begin{equation*}
+    \begin{aligned}
+        \int (\liminf f_n) d\mu  &= \lim \int g_m d\mu \\
+        & \leq \liminf \int f_n d\mu.
+    \end{aligned}        
+    \end{equation*}
+\end{proof}
+
+\begin{thm}{Dominated Convergence Theorem}
+
+Let \((f_n)\) be a sequence of integrable functions which converges almost everywhere to a real-valued measurable function \(f\). If there exists an integrable function \(g\) such that \(|f_n| \leq g\) for all \(n\), then \(f\) is integrable and 
+\[
+\int f \, d\mu = \lim_{n \to \infty} \int f_n \, d\mu.
+\]
+\end{thm}
+\begin{proof}
+    By redefining the functions $f_n$, $f$ on a set of measure 0, we may assume that the convergence takes place on all of $X$. It follows from Corollary 5.4 that $f$ is integrable. Since $g+f \geq 0$, we can apply Fatou's Lemma and Theorem 5.5 to obtain
+    \begin{equation*}
+        \begin{aligned}
+           \int g d\mu + \int f d\mu &= \int (g+f) d\mu \leq \liminf \int (g+f_n)d\mu \\
+           & = \liminf(\int g d\mu + \int f_n d\mu) \\
+           & = \int g d\mu + \liminf \int f_n d\mu.            
+        \end{aligned}
+    \end{equation*}
+    Therefore, it follows that
+    \begin{equation} \label{eqn:5.5Bartle}
+        \int f d\mu \leq \liminf \int f_n d\mu. 
+    \end{equation}
+    Since $g-f_n \geq 0$, another application of Fatou's Lemma and Theorem 5.5 yields
+    \begin{equation*}
+        \begin{aligned}
+            \int g d\mu - \int f d\mu & = \int (g-f) d\mu \leq \liminf \int (g-f_n)d\mu \\
+            & = \int g d\mu - \limsup \int f_n d\mu,
+        \end{aligned}
+    \end{equation*}
+    from which it follows that
+    \begin{equation} \label{eqn:5.6Bartle}
+        \limsup \int f_n \leq \int f d\mu. 
+    \end{equation}
+    Combine (\ref{eqn:5.5Bartle}) and (\ref{eqn:5.6Bartle}) to infer that
+    \begin{equation*}
+        \int f d\mu = \lim \int f_n d\mu. 
+    \end{equation*}
+\end{proof}
+
+\begin{thm}{Egoroff's Theorem}\label{thm:Egoroff} %from Royden Section 3.3
+
+    Assume $E$ has finite measure. Let $\{f_n\}$ be a sequence of measurable functions on $E$ that converges pointwise on $E$ to the real-valued function $f$. The for each $\epsilon>0$, there is a closed set $F$ contained in $E$ for which
+    $\{f_n\} \to f$ uniformly on $F$ and $m(E \setminus F) \epsilon$. 
+\end{thm}
+\begin{cor}\label{cor:cor7Royden}
+    Let $f$ be a bounded measurable function on a set of finite measure $E$. Then 
+\begin{equation*}
+    |\int_E f| \leq \int_E |f|.
+\end{equation*}
+\end{cor}
+\begin{proof}
+    The function $|f|$ is measurable and bounded. Note we have $-|f| \leq f \leq |f|$ on $E$. By the linearity and monotonicity of integration, we have
+    \begin{equation*}
+        -\int_E |f| \leq \int_E f \leq \int_E |f|,
+    \end{equation*}
+    which is the desired result.
+\end{proof}
+\begin{thm}{Bounded Convergence Theorem}\label{thm:bct}
+
+Let $\{f_n\}$ be a sequence of measurable functions on a set of finite measure $E$. Suppose ${f_n}$ is uniformly pointwise bounded on $E$, that is, there is a number $N \geq 0$ for which 
+\begin{equation*}
+\begin{aligned}
+    |f_n| \leq M  & \text{ on }E \text{ for all } n. \\
+    \text{If } \{f_n\} \to f \text{ pointwise on }E, & \text{ then} \lim_{n \to \infty} \int_E f_n = \int_E f \text{.}
+\end{aligned}    
+\end{equation*}
+\end{thm}
+\begin{proof}
+The pointwise limit of a sequence of measurable functions is measurable. Therefore $f$ is measurable. Clearly $|f|<M$ on $E$. Let $A$ be any measurable subset of $E$ and $n$ a natural number. By the linearity and additivity over domains of the integral, we have
+\begin{equation*}
+    \int_E f_n - \int_E f = \int_E (f_n -f) = \int_A (f_n-f) + \int_{E \setminus A} f_n + \int_{E \setminus A} (-f).
+\end{equation*}
+Therefore, by Corollary \ref{cor:cor7Royden} and the monotonicity of integration,
+\begin{equation} \label{eqn:7Royden}
+    |\int_E f_n - \int_E f | \leq \int_A |f_n-f| + 2M \cdot m(E \setminus A).
+\end{equation}
+To prove convergence of the integrals, let $\epsilon>0$. Since $m(E)<\infty$ and $f$ is real-valued, Theorem \ref{thm:Egoroff} (Egoroff's Theorem) tells us that there is a measurable subset $A$ of $E$ for which $\{ f_n \} \to f$ uniformly on $A$ and $m(E \setminus A) < \frac{\epsilon}{4M}$. By uniform convergence, there is an index N for which
+\begin{equation*}
+    |f_n -f | < \frac{\epsilon}{2 \cdot m(E)} \text{ on } A \text{ for all } n \geq N.
+\end{equation*}
+Therefore, for $n \geq N$, we infer from (\ref{eqn:7Royden}) and the monotonicity of integration that
+\begin{equation*}
+    |\int_E f_n - \int_E f| \leq \frac{\epsilon}{2 \cdot m(E)}\cdot m(A) + 2M \cdot m(E \setminus A) < \epsilon.
+\end{equation*}
+Hence the sequence of integrals $\{ \int_E f_n \}$ converges to $\int_E f$.
+\end{proof}
+\section{\textbf{$L^p$ spaces}}\label{sec:LpSpace}
+Now that we have defined Lebesgue Integrals, we are almost ready to define $L^p$ spaces. As we have seen $\mathcal{L}[a,b]$ is a vector space. Our interest is to introduce the notion of length or norm on $\mathcal{L}[a,b]$, which will lead us to define new vector spaces known as $L^p$-spaces.  
+
+\begin{definition}
+\textbf{Norm}    
+A norm is a function $\|\cdot\| : V \to \mathbb{R}$ that assigns a positive real value to the elements of a vector space $V$ and satisfies the following properties:
+
+\begin{enumerate}[i.]
+    \item $\|v\| \geq 0$
+    \item $\|v\| = 0$ if and only if $v=\overline{0}$
+    \item $\|cv\| = |c|\|v\|$
+    \item $\|v+w\| \leq \|w\|+\|v\|$
+\end{enumerate}
+for all $v, w \in V$ and $c \in \mathbb{R}$.
+\end{definition}
+\begin{definition}
+\textbf{Complete vector space}  
+A vector space $V$ is said to be complete with respect to the norm $||\cdot||$ if every Cauchy sequence with respect to the norm $||\cdot||$ converges to some vector $v \in V$. 
+\end{definition}
+
+\begin{definition}
+\textbf{Banach space}
+A Banach space is a vector space $V$ equipped with a norm $||\cdot||$ such that $V$ is complete with respect to the norm $||\cdot||$.    
+\end{definition}
+\begin{definition}
+For $p \geq 1$, we define a family of Banach space, known as $L^p[a,b]$, as follows:
+    \[
+    L^p[a,b] = \{ f | f \text{ is measurable and } |f|^p \text{ is Lebesgue integrable on } [a,b]\}.
+    \]
+\end{definition}
+
+The following lemma verifies that $L^p[a,b]$ is a vector space. 
+
+\begin{lemma}
+\label{LpVectorSpace}
+Let $f,g \in L^p[a, b]$, and $c \in \mathbb{R}$.
+\begin{enumerate}
+    \item[(i)] $cf \in L^p[a, b]$.
+    \item[(ii)] $f + g \in L^p[a, b]$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof} 
+\hfill
+\begin{enumerate}
+    \item[(i)] If $f \in L^p[a, b]$, then $|f|^p$ is Lebesgue integrable. As a consequence, $|c|^p|f|^p = |cf|^p$ is Lebesgue integrable. Hence, $cf \in L^p[a, b]$.
+    
+    \item [(ii)] For every $x \in [a, b]$,
+    \begin{align*}
+        |f(x) + g(x)|^p &\leq (|f(x)| + |g(x)|)^p \\
+        &\leq (2 \max\{|f(x)|, |g(x)|\})^p \\
+        & = 2^p \left(\max\{|f(x)|^p, |g(x)|^p\}\right) \\
+        &\leq 2^p (|f(x)|^p + |g(x)|^p).
+    \end{align*}
+\end{enumerate}
+    Since $2^p (|f(x)|^p + |g(x)|^p)$ is Lebesgue integrable, $f + g \in L^p[a, b]$.
+\end{proof}
+
+
+In order to show that $L^p[a,b]$ is a Banach space, we first need to define a norm on $L^p[a,b]$.
+\begin{definition}
+    Let $f \in L^p[a,b]$. The $L^p$-norm of $f$, written $\|f\|_p$, is
+    \[
+    \|f\|_p = (\int_a^b|f|^p)^{\frac{1}{p}}.
+    \]
+\end{definition}
+
+Using this definition of norm, we will run into the problem that we will only be able to conclude that a Lebesgue integral of a function is zero, which is not the same conclusion as to say the function is identically zero. 
+In order to deal with this issue, before we check if this $L^p$ norm satisfies the norm properties, we introduce two definitions:
+\begin{definition}
+    Define $\sim$ on $\mathcal{L}[a, b]$ by 
+    $f \sim g$ if and only if $f = g$ a.e.  
+
+Then $\sim$ is an equivalence relation on $\mathcal{L}[a,b]$ with the following three conditions: 
+\begin{enumerate}
+  \item[(i)] For all $f \in \mathcal{L}[a, b]$, $f \sim f$.
+  \item[(ii)] For all $f, g \in \mathcal{L}[a, b]$, if $f \sim g$, then $g \sim f$.
+  \item[(iii)] For all $f, g, h \in \mathcal{L}[a, b]$, if $f \sim g$ and $g \sim h$, then $f \sim h$.
+\end{enumerate}
+\end{definition}
+
+\begin{definition}
+    $L^p[a, b]$ is defined to be $\mathcal{L}[a, b]$ modulo the equivalence relation $\sim$.
+\end{definition}
+In other words, we group together all equivalent functions and work with representatives of the resulting equivalent classes. 
+Therefore, in order to be able to say $f=g$, it is enough to have $f=g$ almost everywhere for $x \in [a,b]$ in $L^p[a, b]$.
+
+Let us go through one by one to check if this $L^p$-norm indeed satisfies the norm properties.
+
+\begin{enumerate}
+    \item [(i)] We must show $\|f\|_p \geq 0$. Since $|f(x)|^p \geq 0$ for all $x \in [a, b]$, 
+    \begin{cenmath}
+    \left( \int_a^b |f|^p \right)^{1/p} \geq 0.
+    \end{cenmath}
+    Consequently, $\|f\|_p \geq 0$.
+
+    \item [(ii)] Next, we will show that $\|f\|_p = 0$ if and only if $f = 0$ a.e. in $[a, b]$:
+    %\begin{cenmath}
+    \begin{equation*}
+    \begin{aligned}
+      \|f\|_p = 0  & \quad \text{if and only if} \quad \left( \int_a^b |f|^p \right)^{1/p} = 0\\
+     & \quad \text{if and only if} \quad \int_a^b |f|^p = 0 \\
+     & \quad \text{if and only if} \quad |f|^p = 0 \quad \text{a.e.} \\
+     &  \quad \text{if and only if} \quad f = 0 \quad \text{a.e.}     
+    \end{aligned}
+    \end{equation*}
+    
+    %\end{cenmath}
+
+    \item [(iii)] To see that $\|cf\|_p = |c| \|f\|_p$,
+    \begin{cenmath}
+    \|cf\|_p = \left( \int_a^b |cf|^p \right)^{1/p} = \left( \int_a^b |c|^p |f|^p \right)^{1/p} \\ = \left( |c|^p \int_a^b |f|^p \right)^{1/p} = |c| \left( \int_a^b |f|^p \right)^{1/p} = |c| \|f\|_p.
+    \end{cenmath}
+
+    \item [(iv)] The final property we need to verify is that $\|f+g\|_p \leq \|f\|_p + \|g\|_p$, which is called Minkowski's inequality. For its proof, we introduce Holder's inequality in the following. 
+\end{enumerate}
+
+%An $L^{p}$ space may be defined as a space of measurable functions for which the $p$-th power of the absolute value is Lebesgue integrable, where functions that agree almost everywhere are identified. 
+
+\begin{lemma}
+\label{ForHoldersIneq}
+Let $g \in \mathcal{L}[a, b]$. Suppose $f$ is measurable and $|f(x)| \leq g(x)$ almost everywhere in $[a, b]$. Then $f \in \mathcal{L}[a, b]$.
+\end{lemma}
+\begin{proof}
+WLOG, we may assume that $|f(x)| \leq g(x)$ for all $x \in [a, b]$. We must show that $f^+$ and $f^-$ are Lebesgue integrable. 
+
+Since $|f(x)| \leq g(x)$, both $0 \leq f^+(x) \leq g(x)$ and $0 \leq f^-(x) \leq g(x)$ for all $x \in [a, b]$. 
+
+Since $0 \leq f(x) \leq g(x)$,we have \[ 0 \leq Nf(x) \leq Ng(x) \]
+for each $N$. Thus, \[ \int_a^b Nf(x) \, dx \leq \int_a^b Ng(x) \, dx \leq \int_a^b g(x) \, dx \] for every $N$.
+
+Here, since $\int_a^b Nf(x) \, dx$ increases with $N$ and $\int_a^b Nf(x) \, dx$ is bounded,
+$\lim_{N\to\infty} \int_a^b Nf(x) \, dx$ exists and $f \in \mathcal{L}[a, b]$.
+\end{proof}
+
+\begin{lemma} \label{lemma:AlphaBeta}
+    Let $\alpha,\beta \in (0,1)$ with $\alpha + \beta =1$. Then for any nonnegative numbers $a$ and $b$, we have
+    \begin{equation*}
+        ab \leq \alpha a^{1/alpha} + \beta b^{1/beta}
+    \end{equation*}
+\end{lemma}
+\begin{thm}[Holder’s Inequality]
+Let $f \in L^p[a,b]$ and $g \in L^q[a,b]$, where $p >1$ and $\frac{1}{p} + \frac{1}{q} = 1$. Then $fg \in L^1[a,b]$ and $\| fg \|_1 \leq \|f\|_p\|g\|_q$.
+\begin{proof}
+Suppose $f \in L^p[a, b]$ and $g \in L^q[a, b]$, where $\frac{1}{p} + \frac{1}{q} = 1$. By Lemma \ref{lemma:AlphaBeta} with $\alpha = \frac{1}{p}$ and $\beta = \frac{1}{q}$, 
+\[
+|f(x) g(x)| \leq \frac{1}{p} |f(x)|^p + \frac{1}{q} |g(x)|^q
+\]
+for every $x \in [a, b]$. By Lemma \ref{ForHoldersIneq}, $fg \in L^1[a, b]$ since $|f|^p$ and $|g|^q$ are both Lebesgue integrable.
+
+To prove the inequality
+\[
+\|fg\|_1 \leq \|f\|_p \|g\|_q,
+\]
+we will first observe that this is easily true if either $\|f\|_p = 0$ (that is, $f = 0$ a.e.) or $\|g\|_q = 0$. Therefore, we will assume $\|f\|_p > 0$ and $\|g\|_q > 0$.
+
+We will first look at the special case where $\|f\|_p = \|g\|_q = 1$. As noted above, Lemma \ref{lemma:AlphaBeta} guarantees that
+\[
+|f(x) g(x)| \leq \frac{1}{p} |f(x)|^p + \frac{1}{q} |g(x)|^q;
+\]
+therefore
+\[
+\int_a^b |fg| \leq \frac{1}{p} \int_a^b |f|^p + \frac{1}{q} \int_a^b |g|^q.
+\]
+In other words,
+\[
+\|fg\|_1 \leq \left(\frac{1}{p}\right) \|f\|_p^p + \left(\frac{1}{q}\right) \|g\|_q^q = \frac{1}{p} + \frac{1}{q} = 1 = \|f\|_p \|g\|_q
+\]
+(using the assumption that $\|f\|_p = \|g\|_q = 1$), and we are done in this case.
+
+The more general case follows by setting
+$\tilde{f}(x) = \frac{f(x)}{\|f\|_p}$ and $\tilde{g}(x) = \frac{g(x)}{\|g\|_q}$.
+
+Then $\|\tilde{f}\|_p = 1$ and $\|\tilde{g}\|_q = 1$. Therefore, from our previous special case, $\|\tilde{f}\tilde{g}\|_1 \leq 1$. Hence,
+\[
+\int_a^b |fg| \leq \|\tilde{f}\|_p\|\tilde{g}\|_q = \|f\|_p\|g\|_q
+\]
+or
+\[
+\|fg\|_1 \leq \|f\|_p\|g\|_q.
+\]
+In other words, $\|fg\|_1 \leq \|f\|_p\|g\|_q$, as claimed.
+\end{proof}
+\end{thm}
+
+\begin{thm}[Minkowski's inequality]
+Let $p \geq 1$. If $f,g \in L^p[a, b]$, then
+\[
+\|f + g\|_p \leq \|f\|_p + \|g\|_p.
+\]
+\begin{proof}
+We already have this result for the case $p = 1$, so assume $p > 1$. This result is trivially true if $|f + g| = 0$ a.e. in $[a, b]$. Hence, we will assume $|f + g| > 0$.
+
+In Lemma \ref{LpVectorSpace}, we showed that $|f + g|^p$ is Lebesgue integrable. We will look at this further. Let $q = \frac{p}{p-1}$ (remember, $p > 1$). Then $\frac{1}{p} + \frac{1}{q} = 1$. Note that
+  \begin{equation}
+  \label{LpLq}
+    \begin{aligned}
+(\|f + g\|_p)^{p-1} & = ( \int_a^b |f + g|^p )^{\frac{p-1}{p}}\\
+& = \left( \int_a^b (|f + g|^{p-1})^{\frac{p}{p-1}} \right) ^{\frac{p-1}{p}}  \\
+& = \|(|f+p|^{p-1})\|_q.
+  \end{aligned}
+\end{equation}
+
+ 
+Therefore, $|f + g|^{p-1} \in L^q[a, b]$ and $\|(|f + g|^{p-1})\|_q = \left(\|f + g\|_p\right)^{p-1}$.
+Also, 
+\begin{equation*}
+\begin{aligned}
+|f(x) + g(x)|^p & = |(f(x) + g(x))^p| \\
+                & = |f(x)(f(x) + g(x))^{p-1} + g(x)(f(x) + g(x))^{p-1}| \\
+                & \leq |f(x)| |f(x) + g(x)|^{p-1} + |g(x)| |f(x) + g(x)|^{p-1}.
+\end{aligned}
+\end{equation*}
+
+ Thus,we have
+\begin{equation*}
+\begin{aligned}
+         (\|f+g\|_p)^p &= \int_a^b|f+g|^p \\
+         & \leq \int_a^b |f(x)||f(x)+g(x)|^{p-1}+\int_a^b |g(x)||f(x)+g(x)|^{p-1} \\
+         & \leq \|f\|_p \|(|f+g|^{p-1})\|_q +\|g\|_p\|(|f+g|^{p-1})\|_q        
+ \end{aligned}
+\end{equation*}
+using Holder's inequality for the last line.\\
+By (\ref{LpLq}), we have 
+\begin{equation*}
+     (\|f+g\|_p)^p \leq \|f\|_p (\|f+g\|_p)^{p-1} +\|g\|_p(\|f+g\|_p)^{p-1}   
+\end{equation*}
+, which will, after division by $(\|f+g\|_p)^{p-1}$, lead to
+\begin{equation*}
+     \|f+g\|_p \leq \|f\|_p  +\|g\|_p.  
+\end{equation*}
+\end{proof}    
+\end{thm}
+
+Thus far, we have shown the $L^p$ norm indeed satisfies all the conditions as a valid norm. In order to finally show $L^p$ space is a Banach space, we have to prove it is complete with respect to the $L^p$ norm in the following theorem.
+\begin{thm}
+    For $p>1$, the space $L^p[a,b]$ is complete with respect to the norm $||\cdot||_p$.
+\end{thm}
+ \begin{proof}
+\iffalse
+% copied from Gail. but stopped half-way through.
+ Let $p>1$ and suppose $\{f_n\}$ is a sequence of functions in $L^p[a,b]$ which is Cauchy with respect to the $L^p$ norm. We must show there exists a function $f \in L^p[a,b]$ such that
+ \begin{equation*}
+     \lim_{n \to \infty} || f_n - f ||_p = 0
+ \end{equation*}
+ Since $\{f_n\}$ is a Cauchy sequence, there is an $N_1$ such that 
+ \begin{equation*}
+     ||f_n-f_m||_p < \frac{1}{2} \text{ when } n \text{, } m > N_1
+ \end{equation*}
+ Also there is an $N_2$ such that 
+ \begin{equation*}
+     ||f_n-f_m||_p < \frac{1}{4} \text{ when } m \text{, } m > N_2
+ \end{equation*}
+ Let us pick $n_1$ and $n_2$ such that $n_1 > N_1$, $n_2 > N_2$, and $n_2 > n_1$. Then we have $||f_n_1 - f_n_2||_p < 1/2$. Similarly, there is an $N_3$ such that 
+ \begin{equation*}
+     ||f_n-f_m||_p < \frac{1}{8} \text{ when } m \text{, } m > N_3
+ \end{equation*}
+ If we choose $n_3 > N_3$ and $n_3 > n_2$, then we have $||f_n_2 - f_n_3||_p < 1/4$. Continuing in the same manner, we have $||f_{n_k} - f_{n_{k+1}}||_p < 1/2^k$ for $n_{k+1} > N_{k+1}$ and $n_{k+1} > n_k$.
+\fi 
+Let ${f_n}$ be a Cauchy sequence relative to the norm $||\cdot||_p$. Hence, given $\epsilon>0$, there exists an $M(\epsilon)$ such that if $m,n \leq M(\epsilon)$, then
+\begin{equation} \label{eqn:epsil2}
+    \int |f_m - f_n|^p d\mu = || f_m -f_n ||_{p}^p < \epsilon^p
+\end{equation}
+Note that we can always choose a proper sequence of integers $\{n_{k}\}$ such that $||f_{n_k} - f_{n_{k+1}}||_p < 1/2^k$ for $n_{k+1} > N_{k+1}$ and $n_{k+1} > n_k$ for a certain set of positive integers $\{N_k\}$ since $\{f_n\}$ is a Cauchy sequence. Let us denote $g_k \triangleq f_{n_k}$, then we have 
+\begin{equation*}
+    ||g_{k+1} - g_k||_p < 1/2^k.
+\end{equation*}
+Further defining $g$ by
+\begin{equation} \label{eqn:gx}
+    g(x) \triangleq |g_1(x)| + \sum_{k=1}^{\infty} |g_{k+1}(x) - g_k(x)|,
+\end{equation}
+so that $g \in M+(X,\mathcal{X})$ and applying Fatou's Lemma, we have 
+\begin{equation}
+    \int |g|^p d\mu \leq \liminf_{n \to \infty} \int \{ |g_1| + \sum _{k=1}^{n} |g_{k+1} - g_k| \}^p d\mu. 
+\end{equation}
+By taking the $p$-th root of both sides and applying Minkowski's Inequality, we obtain
+\begin{equation*}
+    \begin{aligned}    
+    \{ \int |g|^p d\mu \}^{1/p} & \leq \liminf_{b \to \infty} \{ ||g_1||_p + \sum_{k=1}^n ||g_{k+1} - g_k||_p \} 
+    & \leq ||g_1||_p + 1.
+    \end{aligned}
+\end{equation*}
+Hence, if $E=\{ x \in \mathcal{X} : g(x) < +\infty \}$, then $E \in \mathcal{X}$ and $\mu(\mathcal{X} \setminus E)=0$. Therefore the series in (\ref{eqn:gx}) converges almost everywhere and $g_{\chi_E}$ belongs to $L^p$.
+
+Now define $f$ on $X$ by
+\begin{equation*}
+    \begin{aligned}     
+    f(x) & \triangleq g_1(x) + \sum_{k=1}^{\infty}\{ g_{k+1}(x) - g_k(x) \} \text{ , } x \in E, \\
+    & = 0 \text{ , } x \notin E.
+    \end{aligned}
+\end{equation*}
+Since $|g_k| \leq |g_1| + \sum_{j=1}^{k-1}|g_j+1-g_j| \leq g$ and since $\{g_k\}$ converges almost everywhere to $f$, the Dominated Convergence Theorem implies $f \in L^p$. Since $|f-g_k|^p \leq 2^p g^p$, we infer from the Dominated Convergence Theorem that $0=\lim||f-g_k||_p$, so that $\{ g_k \}$ converges in $L^p$ to f.
+
+In view of (\ref{eqn:epsil2}), if $m \leq M(\epsilon)$ and $k$ is sufficiently large, then
+\begin{equation*}
+    \int |f_m -g_k|^p d\mu < \epsilon^p.
+\end{equation*}
+Applying Fatou's Lemma, we obtain 
+\begin{equation*}
+    \int |f_m -f|^p d\mu \leq \liminf_{k \to \infty} \int |f_m - g_k|^p d\mu \leq \epsilon^p,
+\end{equation*}
+whenever $m \leq M(\epsilon)$. This proves the sequence $\{f_n\}$ converges to $f$ in the norm of $L^p$.
+ \end{proof}
+We will now define $L^p[a,b]$ for $p=\infty$. We first introduce a definition. 
+\begin{definition}
+    Let $f : [a,b] \to R$ be a measurable function.
+\begin{enumerate}
+    \item[(i)] The essential supremum of $f$ is 
+        \begin{equation*}
+            ess \sup{f}_{x \in [a,b]}} = \inf \{ \alpha | f(x) \leq \alpha \text{ a.e.} \} 
+        \end{equation*}
+    \item[(ii)] The essential infimum of $f$ is 
+    \begin{equation*}
+         ess \inf{f}_{x \in [a,b]}} = \sup \{ \beta | f(x) \geq \beta \text{ a.e.} \} 
+    \end{equation*}
+\end{enumerate}    
+\end{definition}
+\begin{definition}
+    The space $L^\infty[a,b]$ is defined as
+    
+     $ L^\infty[a,b] = \{ f | f \text{ is measurable and } ||f||_{\infty} 
+ \triangleq  ess \sup{f}_{x \in [a,b]}}|f| \text{ is finite} \}.$   
+\end{definition}
+It can be shown that the space $L^\infty[a,b]$ with the $||\cdot||_\infty$ norm is also a Banach space.
+
+\section{\textbf{Applications to machine learning research}}
+\subsection{\textbf{Brief introduction to machine learning}}\label{sec:MLintro}
+Supervised vs. unsupervised learning
+Also mention DNN and GAN.
+%[Revisit] Fill this section
+Briefly mention the current state-of-the-art and how they relate to DNN and GAN.
+
+\subsection{\textbf{Approximation capability of deep neural networks}}\label{sec:approxByDNN}
+
+In this subsection, we study two classic papers from neural-network research that entail the approximation capability of neural-networks. The mathematical analyses of this kind often turns out to be critical in setting our expectations about what the neural networks are capable of. They can provide certain guarantees or estimates about its outputs assuming the input and output can be described as a function belonging to a certain class.
+
+% [Revisit] Draw a few pictures of NN
+
+We first look at theorems from the paper by Cybenco that tries to identify the classes of functions that can be effectively realized by artificial neural networks. More specifically, the theorems demonstrate that networks with only one internal layer and an arbitrary continuous or bounded measurable sigmoidal function can well approximate arbitrary continuous functions or functions in the $L^1$ space. The second paper is one by Hornik that shows a single-layer neural network with continuous 'neurons' can again well approximate any continuous or Borel-measurable functions.  
+
+We can see similar results are obtained in both papers and some concepts and tools from functional analysis are heavily used. Specifically, the former uses the Hahn-Banach Theorem and Riesz representation Theorem while the latter relies on Stone-Weierstrass Theorem. We will introduce these theorems and related concepts as they become relevant in going through the discussions. Along the way we will appreciate that the basics of measure theory and $L^p$ space we learned earlier indeed provide the essential basis in understanding and applying the tools from functional analysis.   
+
+%\subsubsection{\textbf{Concepts and tools from functional analysis}}
+
+
+ 
+\subsubsection{\textbf{Approximation by superpositions of a sigmoidal function}}
+[Revisit] Introduction here
+
+\begin{definition} 
+\textbf{Sigmoidal function}
+A function $\sigma : R \to [0,1]$ is called sigmoidal if
+\begin{equation*}
+     \lim_{x \to -\infty} \sigma(x)=0 \text{, } \lim_{x \to +\infty} \sigma(x) =1
+\end{equation*}
+\end{definition}
+\begin{definition} 
+\textbf{Discriminatory function}
+We say that $\sigma$ is discriminatory if for a measure $\mu \in M(I_n)$
+\begin{equation*}
+    \int_{I_n} \sigma(y^T+\theta)d\mu(x)=0
+\end{equation*}
+for all $y \in R^n$ and $\theta \in R$ implies that $\mu=0$.
+\end{definition}
+
+\begin{definition}
+\textbf{Set of Borel-measurable functions}
+    Let $C^n$ be the set of continuous functions from $R^n$ to $R$, and let $M^n$ be the set of all Borel-measurable functions from $R^n$ to $R$. We also denote the Borel $\sigma$-field of $R^n$ as $B^n$.
+\end{definition}
+
+
+\begin{definition} 
+\textbf{Linear functional}  
+A linear functional on $L^p$ is a mapping $G$ of $L^p$ into $R$ such that 
+\begin{equation*}
+ G(af+bg)=aG(f)+bG(g)    
+\end{equation*}
+for all $a$,$b$ $\in R$ and $f$,$g$ $\in L^p$.
+\end{definition}
+
+\begin{definition} 
+\textbf{Bounded linear functional} 
+The linear functional $G$ is bounded if there exists a constant $M$ such that 
+\begin{equation*}
+    |G(f)| \leq M||f||_p
+\end{equation*}
+for all $f \in L^p$.
+\end{definition}
+
+\begin{definition} 
+\textbf{Norm of a linear functional}  The bound or the norm of a linear functional $G$ is defined to be 
+\begin{equation*}
+    ||G||=\sup{\{|G(f)|:f \in L^p, ||f||_p \leq 1\}}.
+\end{equation*}
+\end{definition}
+
+\begin{thm}
+\textbf{Hahn-Banach Theorem}
+Suppose $V$ is a normed vector space, $U$ is a subspace of $V$, and $\Psi : U \mapsto F$ is a bounded linear functional. Then $\Psi$ can be extended to a bounded linear functional on $V$ whose norm equals $||\Psi||$.
+\end{thm}
+ 
+\begin{thm} 
+\textbf{Riesz Representation Theorem(I)}
+%Suppose $\varphi$ is a bounded linear functional on a Hilbert space %$V$. Then there exists a unique $h \in V$ such that $\varphi(f) = <f,h>$ for all $f \in V$. Furthermore, $||\varphi|| = ||h||$.
+If $(X,\mathcal{X},\mu)$ is a $\sigma$-finite measure space and $G$ is a bounded linear functional on $L^1(X,\mathcal{X},\mu)$, then there exists $g \in L^\infty(X,\mathcal{X},\mu)$ such that 
+\begin{equation*}
+    G(f)=\int fg d\mu
+\end{equation*}
+holds for all $f \in L^1$. Moreover, $||G||=||g||_\infty$ and $g \geq 0$ if $G$ is a positive linear functional.
+\end{thm}
+ 
+\begin{thm} 
+\textbf{Riesz Representation Theorem(II)}
+If $(X,\mathcal{X},\mu)$ is an arbitrary measure space and $G$ is a bounded linear functional on $L^p(X,\mathcal{X},\mu)$, $ 1 < p < \infty$, then there exists $g \in L^q(X,\mathcal{X},\mu)$, where $q=p/(p-1)$, such that  
+\begin{equation*}
+    G(f)=\int fg d\mu
+\end{equation*}
+holds for all $f \in L^p$. Moreover, $||G||=||g||_q$.
+\end{thm}
+
+\begin{thm} 
+\textbf{Riesz Representation Theorem(III)}
+If $G$ is a bounded positive linear functional on $C(I_n)$, which is the Banach space of all continuous functions on $I_n$ to $R$ with the norm $||f|| = \sup \{ |f(x)| : x \in I_n \}$, then there exists a measure $\mu$ defined on the Borel subsets of $R$ such that 
+\begin{equation*}
+    G(f)=\int_{I_n} f d\mu
+\end{equation*}
+for all $f \in C(I_n)$. Moreover, the norm $||G||$ of $G$ equals $\mu(I_n)$. 
+\end{thm}
+
+
+
+
+
+\begin{lemma} \label{lemma:ApplyHB}
+    Let $U$ be a linear subspace of a normed linear space $X$ and consider $x_0 \in X$ such that $|| x_0 -u || \geq \delta$ for all $u \in U$ and some $\delta > 0$. Then there is a bounded linear functional $\mathcal{L}$ on $X$ such that
+    \begin{itemize}
+        \item[(i)] $||\mathcal{L}|| \leq 1$
+        \item[(ii)] $\mathcal{L}(u)=0$ for all $u \in U$, i.e., $\mathcal{L}_{|_U}=0$
+        \item[(iii)] $\mathcal{L}(x_0) = \delta$
+    \end{itemize}    
+\end{lemma}
+\begin{proof}
+    Consider the linear space $\Upsilon$ generated by $U$ and $x_0$ as $\Upsilon = \{ t : t =u+\lambda x_0 \text{ for } u \in U \text{, } \lambda \in R \}$. Also define the function $L: \Upsilon \to R$ by $L(t) = L(u+\lambda x_0) \triangleq \lambda \delta$.
+    
+    Since we have $L(t_1 + t_2) = L(u_1+u_2+(\lambda_1 + \lambda_2)x_0) = (\lambda_1 + \lambda_2)\delta = L(t_1) + L(t_2)$ as well as $L(\alpha t) = \alpha L(t)$, it follows that $L$ is a linear functional on $\Upsilon$.  
+
+    Next, we show $L(t) \leq ||t||$ for all $t \in \Upsilon$. First note that if $u \in \U$, we have $-u/ \lambda \in U$ and $||x_0 + u/\lambda|| \geq \delta$ for some $\delta > 0$ by assumption, which can be rewritten as $|\lambda|\delta \leq ||u +\lambda x_0||$.
+    
+    This leads to 
+    \begin{equation*}
+        \begin{aligned}
+            L(t) &= L(u+\lambda x_0)\\
+            &= \lambda \delta \\
+            &\leq |\lambda| \delta \\
+            &\leq ||U+\lambda x_0 || =||t||
+        \end{aligned}
+    \end{equation*}
+    Hence we obtain $L(t)\leq ||t||$ for all $t \in \Upsilon$, which implies $||L|| \triangleq ||L(t)||_{ \sup_{||t|| \leq 1}} \leq ||t||_{\sup_{||t||\leq 1}} \leq 1$. Note this allows us to apply the Hahn-Banach Theorem, with the norm $p(x)\triangleq ||x||$ and see $L$ can be extended to a linear functional on $X$ denoted by $\mathcal{L}$ such that $||\mathcal{L}||=||L||\leq 1$ for all $x \in X$, which proves (i).
+
+    In addition, we also have, for (ii) and (iii), 
+    \begin{equation*}
+    \begin{aligned}
+        \mathcal{L}(u) & = \mathcal{L}_|_\Upsilon (u) = L(u) = L_|_U (u) =  L(u+0\cdot x_0) = 0 \cdot \delta = 0 \text{ for all } u \in U \\
+        \mathcal{L}(x_0) & = \mathcal{L}_|_\Upsilon (x_0)= L(x_0) = L(0+1\cdot x_0) = 1 \cdot \delta = \delta 
+        \end{aligned}
+    \end{equation*}
+\end{proof}
+
+\begin{lemma} \label{lemma:ApplyHB2}
+  \textbf{Reformulation of Lemma \ref{lemma:ApplyHB}}
+  Let $U$ be a linear, non-dense subspace of a normed linear space $X$. Then there exists a bounded linear functional $\mathcal{L}$ on $X$ such that $\mathcal{L} \neq 0$ on $X$ and $\mathcal{L}_|_U = 0$.
+\end{lemma}
+
+\begin{lemma} \label{lemma:nondense}
+    Let $U$ be a linear, non-dense subspace of $C(I_n)$. Then there is a measure $\mu \in M(I_n)$ such that 
+    \begin{equation*}
+        \int_{I_n} h d\mu = 0 \text{ for all } h \in U 
+    \end{equation*}
+\end{lemma}
+\begin{proof}
+    If we let $X\triangleq C(I_n)$ in lemma \ref{lemma:ApplyHB2}, there is a bounded linear functional $\mathcal{L}: C(I_n) \to R$ such that $\mathcal{L} \neq 0$ on $C(I_n)$ and $\mathcal{L}_|_U=0$. Applying the Riesz representation theorem of linear bounded functionals on $C(I_n)$, there is a measure $\mu \in M(I_n)$ such that 
+    \begin{equation}
+        \mathcal{L}(f) = \int_{I_n} f d \mu \text{ for all } f \in c(I_n)
+    \end{equation}
+    In particular, for any $h \in U$, we obtain 
+    \begin{equation}
+        \mathcal{L}(h) = \int_{I_n} h d\mu = 0
+    \end{equation}
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Thm1 of Cybenco
+\begin{thm}\label{CybencoThm1}
+\textbf{[Cybenco89,Theorem1]}
+% Calin, Prop9.3.5
+    Let $\sigma$ be any continuous discriminatory function. Then finite sums of the form
+    \begin{equation}\label{eqn:CybencoThm1}
+        G(x) = \sum_{j=1}^N \alpha_j \sigma(y_j^T x + \theta_j) 
+    \end{equation}
+    are dense in $C(I_n)$. In other words, given any $f \in C(I_n)$ and $\epsilon > 0$, there is a sum, $G(x)$, of the above form, for which
+    \begin{equation*}
+        |G(x)-f(x)| \leq \epsilon \quad \text{for all } x \in I_n.
+    \end{equation*}
+\end{thm}
+\begin{proof}
+    Let $S \subset C(I_n)$ be the set of functions of the form $G(x)$ as in (\ref{eqn:CybencoThm1}). Clearly $S$ is a linear subspace of $C(I_n)$. Now assume $S$ is not dense in $C(I_n)$. By lemma \ref{lemma:nondense}, there is a measure $\mu \in M(I_n)$ such that \begin{equation*}
+        \int_{I_n} hd\mu = 0 \text{ for all } h \in S
+    \end{equation*}
+    ,which leads to 
+    \begin{equation*}
+       \sum_{j=1}^N \alpha_j \int_{I_n} \sigma(y_j^T x + \theta_j)d\mu =0 
+    \end{equation*}
+    By selecting $\alpha_j$'s judiciously, we obtain 
+    \begin{equation*}
+        \int_{I_n}\sigma(y^T+\theta)d\mu =0 \text{ for all } y \in R^n \text{, } \theta \in R 
+    \end{equation*}
+    Since $\sigma$ is discriminatory, it requires $\mu=0$, which is a contradiction. Hence, the subspace $S$ must be dense in $C(I_n)$
+ 
+\end{proof}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% We prove Lemma1 of Cybenco via {lemma:Calin223} and {CybencoLemma1}
+\begin{lemma}\label{lemma:Calin223}
+Let $\mu \in M(I_n)$. If $\mu$ vanishes on all hyper-planes $P_{w,\theta}$ and open half-spaces $H_{w,\theta}$ in $R^n$, then $\mu$ is zero. More precisely, if $\mu(P_{w,\theta})=0$ and $\mu(H_{w,\theta})=0$ for all $w \in R^n$ and $\theta \in R$, then $\mu=0$, where $P_{w,\theta}$ and $H_{w,\theta}$ are defined as follows: 
+\begin{equation*}
+    \begin{aligned}
+        P_{w,\theta} & = \{ x : w^Tx+\theta =0 \} \\
+        H_{w,\theta} & = \{ x : w^Tx+\theta > 0 \}
+    \end{aligned}
+\end{equation*}
+\begin{proof}
+Let $w \in R^n$ be fixed and $h$ be a bounded measurable function. Consider the linear functional $F: L^\infty (R) \to R$ be defined by
+\begin{equation*}
+    F(h) = \int_{I_n} h(w^Tx)d\mu(x)
+\end{equation*}
+where $L^\infty(R)$ denotes the space of a.e. bounded functions on $R$. 
+Note the following inequality holds:
+\begin{equation*}
+    \begin{aligned}
+        |F(h)| &= |\int_{I_n} h(w^Tx)d\mu(x) \\
+        & \leq ||h||_\infty |\int_{I_n}d\mu(x)| = ||h||_\infty  |\mu(x)|        
+    \end{aligned}
+\end{equation*}
+, which shows $F$ is a bounded functional since $\mu$ is a finite measure. 
+
+Now consider $h=1_{[\theta,\infty)}$, i.e., $h$ is the indicator function of the interval $ [\theta,\infty)$. Then we have 
+\begin{equation*}
+    \begin{aligned}
+        F(h) &=\int_{I_n} h(w^Tx)d\mu(x) = \int_{\{w^T \leq \theta\}} d\mu(x) \\
+        & = \mu(P_{w,\theta}) + \mu(H_{w,-\theta}) \\
+        & = 0
+    \end{aligned}
+\end{equation*}
+by the assumption. 
+Similarly, if h is the indicator function of the open interval $(\theta,\infty)$,i.e., $h=1_{(\theta,\infty)}$ we obtain 
+\begin{equation*}
+    \begin{aligned}
+        F(h) &=\int_{I_n} h(w^Tx)d\mu(x) = \int_{\{w^T > \theta\}} d\mu(x) \\
+        & = \mu(H_{w,-\theta}) = 0\\       
+    \end{aligned}
+\end{equation*}
+Since the indicator of any interval can be written in terms of the above indicator functions, it follows from linearity that $F$ vanishes on any indicator function. Applying the linearity again, we obtain that $F$ vanishes on simple functions as follows:
+\begin{equation*}
+    F(\sum_{i=1}^{N}\alpha_i 1_{J_i}) = \sum_{i=1}^{N} \alpha_i F(1_{J_i}) = 0
+\end{equation*}
+for any $\alpha_i \in R$ and interval $J_i$.
+
+Since simple functions are dense in $L^\infty(R)$ (see Section 7.4 of \cite{Royden}), it follows that $F(h)=0$ for any $h \in L^\infty(R)$. In other words, for any fixed $f \in L^\infty(R)$, there is a sequence of simple functions $(S_k)_n$ such that $S_n \to f$. Since $F$ is bounded and continuous, we have
+\begin{equation*}
+    F(f)=F(\lim_{n \to \infty} S_n) = \lim_{n \to \infty} F(S_n) = 0
+\end{equation*}
+Now we compute the Fourier Transform of the measure $\mu$ as 
+\begin{equation*}
+    \begin{aligned}
+        \hat{\mu} & = \int_{I_n} \exp^{iw^Tx} d\mu(x) 
+        &= \int_{I_n} \cos{(w^Tx)}d\mu(x) + i \int_{I_n}\sin{(w^Tx)}d\mu(x)
+        &= F(\cos{(\cdot)}) + i F(\sin{(\cdot)}) = 0
+    \end{aligned}
+\end{equation*}
+for all $w \in R^n$ since $F$ vanishes on the bounded functions sin() and cos() which belong to $L^\infty(R)$. Therefore we have $\mu=0$ since the inverse Fourier Transform of zero is zero.
+\end{proof}
+\end{lemma}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{lemma}\label{CybencoLemma1}
+    Any bounded, measurable sigmoidal function, $\sigma$, is discriminatory for all measures $\mu \in M(I_n)$. In particular, any continuous sigmoidal function is discriminatory.
+\begin{proof}
+Let $\mu \in M(I_n)$ be a fixed measure. Choose a bounded measurable sigmoidal function $\sigma$ that satisfies
+\begin{equation}\label{eqn:discriminatory}
+    \int_{I_n} \sigma(w^Tx+\theta)d\mu(x)=0
+\end{equation}
+for all $w \in R^$ and $\theta \in R$, we need to show $\mu=0$. Note that the continuous sigmoidal function is also bounded (by definition of sigmoidal function) and measurable for measures in $M(I_n)$. 
+
+First, if we construct $\sigma_\lambda (x) \triangleq \sigma(\lambda (w^Tx+\theta) + \varphi)$, then, by the definition of a sigmoidal, we have
+    \begin{equation*}
+        \lim_{\lambda \to \infty} \sigma_{\lambda}(x) = \begin{cases}
+            1 \text{, for } w^Tx+\theta > 0 \\
+            0 \text{, for } w^Tx+\theta <0 \\
+            \sigma(\varphi) \text{, for } w^Tx+\theta = 0  
+        \end{cases}
+    \end{equation*}
+Therefore, we have $\sigma_{\lambda}(x) \to \gamma(x)$ pointwise on $R$ as $\lambda \to \infty$, where the bounded function $\gamma(x)$ is defined as
+    \begin{equation*}
+        \gamma(x) = \begin{cases}
+            1 \text{, for } x \in H_{w,\theta} \\
+            0 \text{, for } x \in H^{-}_{w,\theta} \\
+            \sigma(\varphi) \text{, for } x \in P_{w,\theta}  
+        \end{cases}
+    \end{equation*}
+    where $H^{-}_{w,\theta}$ is defined as $\{ x : w^Tx+\theta < 0 \}$ in addition to $P_{w,\theta}$ and $H_{w,\theta}$ already defined in lemma \ref{lemma:Calin223}. Since $\sigma_{\lambda}(x)$ is a bounded measurable sequence of $\lambda$, we can apply Theorem \ref{thm:bct} (Bounded Convergence Theorem) to switch the order of the limit and the integral as follows:
+    \begin{equation}\label{eqn:ApplyBCT}
+        \begin{aligned}
+            \lim_{\lambda \to \infty} \int_{I_n} \sigma_{\lambda}(x) d\mu(x) &= \int_{I_n} \lim_{\lambda \to \infty }  \sigma_{\lambda}(x) d\mu(x) \\
+            &= \int_{I_n} \gamma(x)d\mu(x)\\
+            & = \int_{H_{w,\theta}}\gamma(x)d\mu(x) + \int_{H^{-}_{w,\theta}}\gamma(x)d\mu(x) + \int_{P_{w,\theta}}\gamma(x)d\mu(x) \\
+            & = \mu(H_{w,\theta}) + \sigma(\varphi)\mu(P_{w,\theta})
+        \end{aligned}
+    \end{equation}
+Since (\ref{eqn:discriminatory}) implies $\int_{I_n} \sigma_{\lambda}(x)d\mu(x) = \int_{I_n} \sigma(\lambda w^T+\lambda \theta) + \varphi)d\mu(x) =0$, we have the left-side of (\ref{eqn:ApplyBCT}) zero hence obtain the following
+\begin{equation}\label{eqn:BCTresult}
+   \mu(H_{w,\theta}) + \sigma(\varphi)\mu(P_{w,\theta}) =0    
+\end{equation}
+Since (\ref{eqn:BCTresult}) holds for $\varphi \to \infty$ and $\varphi \to -\infty$, due to the properties of $\sigma$, we have 
+\begin{equation*}
+    \begin{aligned}
+        \mu(H_{w,\theta}) + \mu(P_{w,\theta}) = 0 \\
+        \mu(H_{w,\theta}) = 0
+    \end{aligned}
+\end{equation*}
+for all $w \in R^n$ and $\theta \in R$. Thus, by lemma \ref{lemma:Calin223}, we have $\mu=0$, which proves $\sigma$ is discriminatory. 
+\end{proof}
+\end{lemma}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{thm}\label{Cybencothm2}
+% Thm 9.3.6 of Calin (Thm2 of Cybenco)
+\textbf{[Cybenco89,Theorem2]} 
+Let $\sigma$ be any continuous sigmoidal function. Then finite sums of the form 
+\begin{equation}
+    G(x)=\sum_{j=1}^{N} \alpha_{j} \sigma(y_{j}^{T}x+\theta_{j})
+\end{equation}
+are dense in $C(I_n)$. In other words, given any $f \in C(I_{n})$ and $\epsilon > 0$, there is a sum, $G(x)$, of the above form, for which \\
+\begin{equation*}
+|G(x)-f(x)| < \epsilon \text{   for all $x \in I_{n}$}    
+\end{equation*}
+\end{thm}
+\begin{proof}
+    Combine Theorem\ref{CybencoThm1} and Lemma\ref{CybencoLemma1}, noting that continuous sigmoids satisfy the conditions of that lemma. 
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{thm}
+% Thm 9.3.18 of Calin (Thm4 of Cybenco)
+\textbf{[Cybenco89,Theorem4]} 
+
+Let $\sigma$ be bounded measurable sigmoidal function. Then finite sums of the form 
+\begin{equation}
+    G(x)=\sum_{j=1}^N \alpha_{j} \sigma(y_j^T x + \theta_j)
+\end{equation}
+are dense in $L^1(I_n)$. In other words, given any $f \in L^1(I_n)$ and $\epsilon > 0$, there is a sum,c$G(x)$c, of the above form for which 
+\begin{equation*}
+    ||G-f||_{L^1} = \int _{I_n} | G(x)-f(x)| dx < \epsilon
+\end{equation*}
+\end{thm}
+\begin{proof}
+     Assume a linear subspace of $L^1(I_n)$   
+        \begin{equation*}        
+        U=\{ G : G(x)=\sum^N_{j=1} \alpha_j \sigma(w_j^Tx+\theta_j) \} 
+        \end{equation*}
+        is not dense in $L^1(I_n)$. By lemma \ref{lemma:ApplyHB2}, there exists a bounded linear functional $F:L^1(I_n) \to R$ such that $F \neq 0$ on $L^1(I_n)$ and $F_|_U=0$. Noting that $L^\infty(I_n)$ is the dual of $L^1(I_n)$, Riesz Theorem guarantees the existence of $g \in L^\infty(I_n)$ such that 
+        \begin{equation*}
+            F(f)=\int_{I_n}f(x)g(x)dx \text{ with } ||F|| = ||g||_1 \neq 0 \text{.}
+        \end{equation*}
+  
+        Now, writing the condition $F_|U=0$ as
+        \begin{equation*}
+            \int_{I_n} G(x)g(x)dx=0 \text{ for all } G \in U \text{,}
+        \end{equation*}
+    we have $\int_{I_n} \sigma(w^Tx+\theta)g(x)dx=0$.
+    
+   Since $\sigma$ is bounded and measurable, by lemma \ref{CybencoLemma1}, it is discriminatory for the measure $\mu(x) \triangleq g(x)dx$ which belongs to $M(I_n)$ given any $g(x) \in L^\infty(I_n)$. Therefore we require $g(x)=0$, which contradicts $||F|| \neq 0$. It follows that $U$ is dense in $L^1(I_n)$.   
+\iffalse
+    The proof follows the proof of Theorems \ref{CybencoThm1} and \ref{Cybencothm2} with obvious changes such as replacing continuous functions by integrable functions and using the fact that $L^\infty(I_n)$ is the dual of $L^1(I_n)$. The notion of being discriminatory accordingly changes to the following:\\
+    for $h \in L^\infty(I_n)$ the condition that
+    \begin{equation*}       
+        \int_{I_n} \sigma(y^Tx+\theta)h(x)dx=0
+    \end{equation*}
+    for all $y$ and $\theta$ implies that $h(x)=0$ almost everywhere. General sigmoidal functions are discriminatory in this sense as already seen in Lemma \ref{CybencoLemma1} because measures of the form $h(x)dx$ belong to $M(I_n)$.
+\fi    
+\end{proof}
+
+\subsubsection{\textbf{Universal approximation with a single hidden layer}}
+
+[Revisit] Introduction here
+
+\iffalse
+[TBD] Compact set
+[TBD] Uniform closure
+\fi
+
+
+
+\begin{definition}
+    For any measurable function $G(\cdot)$ mapping $R$ to $R$ and $r \in N$, let $\Sigma \Pi^r (G)$ be the class of functions 
+    $\{ f: R^r \to R :  f(x)=\sum_{j=1}^{p} \beta_{j} \prod_{k=1}^{q_j} G(w_{jk}^{T}x+\theta_{jk})\}$,where $w_{jk} \in R^r$, $\beta_{j}, \theta_{jk} \in R$, $x \in R^r$, and $p, q_j \in N$
+\end{definition}
+The class $\Sigma\Pi^n(G)$ belong to $M^n$ for any Borel measurable $G$. When $G$ is continuous, they all belong to $C^n$. The class $C^n$ is a subset of $M^n$ and it virtually contains all functions relevant in applications. 
+
+The first result below concern approximating functions in $C^n$, and the second one will extend this to approximating functions in $M^n$.
+
+Closeness of functions $f$ and $g$ belonging to $C^n$ or $M^n$ is measured by a metric, $\rho$, while closeness of one class of functions to another is described by denseness.
+
+\begin{definition}
+    A subset $S$ of a metric space $(X,\rho)$ is $\rho$-dense in a subset $T$ if for every $\epsilon>0$ and for every $t \in T$, there is an $s \in S$ such that $\rho(s,t)<\epsilon$.
+\end{definition}
+This means an element of $S$ can approximate an element of $T$ to any desired degree of accuracy. In our theorems below, $X$ and $T$ correspond to $M^n$ and $C^n$, respectively, while $S$ corresponds to $\Sigma \Pi^n (G)$ for specific choices of $G$, and $\rho$ is chosen appropriately.
+\begin{definition}
+    A subset $S$ of $C^n$ is said to be uniformly dense on compacta in $C^n$ if for every compact subset $K \subset R^n$, $S$ is $\rho_k$-dense in $C^n$, where for $f,g \in C^n$, $\rho_k(f,g)\equiv \sup_{x\in K} |f(x)-g(x)|$.
+\end{definition}
+
+
+\begin{definition}
+    A family $A$ of real functions defined on a set $E$ is an algebra if $A$ is closed under addition,multiplication, and scalar multiplication.
+\end{definition}
+\begin{definition}%From RudinMathAnalysis Def7.28
+If $A$ has the property that $f \in A$ whenever $f_n \in A$ and $f_n \to f$ uniformly on $E$, then $A$ is said to be uniformly closed.
+\end{definition}
+
+\begin{definition} %From RudinMathAnalysis Def7.28
+    Let $B$ be the set of all functions which are limits of uniformly convergent sequences of members of $A$. Then $B$ is called the uniform closure of $A$.
+\end{definition}
+\begin{definition}
+    A family A separates points on $E$ if for every $x,y$ in $E$ such that $x\neq y$, there exists a function $f$ in $A$ such that $f(x)\neq f(y)$. Also a family $A$ vanishes at no point of $E$ if for each $x$ in $E$, there exists $f$ in $A$ such that $f(x)\neq 0$.
+\end{definition}
+
+\begin{thm} \label{thm:stonew}
+\textbf{Stone-Weierstrass theorem \cite{RudinMathAnalysis} } \label{thm:StoneW}
+Let $A$ be an algebra of real continuous functions on a compact set $K$. If $A$ separates points on $K$ and if $A$ vanishes at no point of $K$, then the uniform closure $B$ of $A$ consists of all real continuous functions on $K$ (i.e., $A$ is $\rho_K$-dense in the space of real continuous functions on $K$).
+% From Section 12.3 of Royden
+%Let $X$ be a compact Hausdorff space. Suppose $A$ is an algebra of continuous real-valued functions on $X$ that separates points %in $X$ and contains the constant functions. Then $A$ is dense in $C(X)$.
+% Uniform closure (see Section 9.2 of \cite{Royden})
+\end{thm}
+% [Revisit] compact set
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{thm}\label{HornikThm2.1}
+% Thm 9.3.8+remark9.3.9+Thm9.3.22 in Calin (Thm2.1 of Hornik89)
+%\textbf{Approximation of continuous functions by NN [hornik89,Theorem2.1]} 
+\textbf{[Hornik89,Theorem 2.1]} 
+%Let $G$ be any continuous nonconstant function from $R$ to $R$. Then $\Sigma\Pi^{r}(G)$ is uniformly dense on compacta in $C^{r}$.
+Let $G$ be any continuous nonconstant function from $R$ to $R$. Then the finite sum of the form
+\begin{equation}
+    f(x)=\sum_{j=1}^{p} \beta_{j} \prod_{k=1}^{q_j} G(w_{jk}^{T}x+\theta_{jk})
+\end{equation}
+where $w_{jk} \in R^r$, $\beta_{j}, \theta_{jk} \in R$, $x \in R^r$, and $p, q_j \in N$ are uniformly dense in $C^{r}$. 
+\begin{proof}
+%$ $\newline
+We apply the Stone-Weierstrass Theorem. Let $K \subset R^r$ be any compact set. 
+
+\iffalse
+First, for any $G$, $\Sigma\Pi^r(G)$ is obviously an algebra on $K$. If $x,y \in K, x \neq y,$ then there is an $A \in \mathcal{A}^r$ such that $G(A(x)) \neq G(A(y))$. To see this, pick $a,b \in R, a \neq b$ such that $G(a) \neq G(b).$ Pick $A(\cdot)$ to satisfy $A(x)=a, A(y)=b$. Then $G(A(x)) \neq G(A(y))$. This ensures that $\Sigma\Pi^r(G)$ is separating $K$.
+\fi 
+
+%Alternative proof
+First, for any $G$, $\Sigma\Pi^r(G)$ is obviously an algebra on $K$.
+Now, if we let $x,y \in K$, $x \neq y$, then we need to show there is $f \in \Sigma\Pi^r$ such that $f(x) \neq f(y)$. Since $G$ is nonconstant, there are $a,b \in R, a \neq b$ with $G(a) \neq G(b)$. Pick $x$ and $y$ from the hyperplanes $\{ w^Tx+\theta=a\}$ and $\{w^Tx+\theta=b \}$, respectively. Then $f(u)=G(w^Tu+\theta)$ separates $x$ and $y$. We can see this by noting that $f(x)=G(w^Tx+\theta)=G(a)$ and $f(y)=G(w^Ty+\theta)=G(b) \neq G(a)$. 
+
+ \iffalse
+Second, there are $G(A(\cdot))$'s that are constant and not equal to zero. To see this, pick $b \in R$ such that $G(b) \neq 0$ and set $A(x)=0 \cdot x+b$. For all $x \in K$, $G(A(x)) = G(b)$.
+\fi 
+Second, let $\theta$ satisfy $G(\theta)\neq 0$ and choose a vector $w^T=(0,...,0) \in R^r$. Then $f(x) \equiv G(w^Tx+\theta)=G(\theta)\neq 0$ is a non-zero constant for all $x \in K$. This ensures that $\Sigma\Pi^r(G)$ vanishes at no point of $K$. The Stone-Weierstrass Theorem thus implies that $\Sigma\Pi^r(G)$ is $\rho_K$-dense in the space of real continuous functions on $K$. Because $K$ is arbitrary, the result follows.
+\end{proof}
+\end{thm}
+%\begin{definition} 
+%\textbf{Chebyshev's inequality}
+%Let  
+%\end{definition}
+
+
+\begin{definition}
+    Let $\mu$ be a probability measure on the measurable space $(R^n,B(R^n))$. We say two measurable functions $f$ and $g$ are $\mu$-equivalent if $\mu \{x \in R^n: f(x) \neq g(x)\} =0$, or equivalently $\mu\{x \in R^n:f(x)=g(x)\}=1$.
+\end{definition}
+The metric on classes of $\mu$-equivalent functions relevant for our next results is given by the next definition.
+\begin{definition}
+    Given a probability measure $\mu$ on $(R^r,B^r)$, define the metric $\rho_\mu$ from $M^r \times M^r$ to $R^+$ by $\rho_\mu (f,g)=\inf \{ \epsilon > 0 : \mu\{x: |f(x)-g(x)|> \epsilon \} < \epsilon \}.$
+\end{definition}
+
+Two functions are close in this metric if and only if there is only a small probability that they differ significantly.  If $f$ and $g$ are $\mu$-equivalent, $\rho_\mu (f,g)$ equals zero.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{lemma}\label{HornikLemma2.1}
+% Lemma 9.3.20 of Calin
+    All of the following are equivalent.
+    \begin{itemize}
+        \item [(a)] $\rho_u(f_n,f) \to 0.$\\
+        \item [(b)] For every $\epsilon >0$, $\mu\{x: |f_n(x)-f(x)| > \epsilon \} \to 0.$\\
+        \item[(c)] $\int \min \{ |f_n(x)-f(x)|, 1 \} \mu(dx) \to 0.$
+    \end{itemize}
+\begin{proof} 
+\iffalse
+    (a) $\Leftrightarrow$ (b): Obvious\\
+    (b) $\Rightarrow$ (c): If $\mu\{x : |f_n(x)-f(x)| > \epsilon/2 \} < \epsilon/2$ then $\int \min\{ |f_n(x)-f(x)|, 1 \}\mu(dx) < \epsilon/2 + \epsilon/2 = \epsilon.$ \\
+    (c) $\Rightarrow$ (b): This follows from Chebyshev's inequality.    
+\fi 
+(a) $\to$ (b): \\
+Assume (a) holds. 
+Then by definition, for any $\epsilon > 0$ such that $\mu(|f_j-f|> \epsilon) < \epsilon$, we have $\rho_\mu (f_j,f) \leq \epsilon$. 
+Since $\rho_\mu (f_j,f) \to 0$, we may choose $\epsilon \triangleq \frac{1}{n_j} \to 0$ such that 
+\begin{equation}\label{eqn:epsilon}
+\mu(|f_j-f| > \frac{1}{n_j}) < \frac{1}{n_j}
+\end{equation}
+If we assume (b) does not hold, there exists an $\epsilon_0 > 0$ such that $\mu\{ |f_j-f| > \epsilon \} > \epsilon_0$. This means $\mu\{ |f_j-f| > \frac{1}{n_j} \} > \epsilon_0$ when $\epsilon \triangleq \frac{1}{n_j}$ even as $j \to \infty$, which is contradictory to (\ref{eqn:epsilon}).
+(b) $\to$ (a): obvious.\\
+(b) $\iff$ (c): \\
+Let $\epsilon \in (0,1)$ be fixed and note 
+\begin{equation} \label{eqn:epsil}
+\epsilon 1_{(\epsilon,+\infty)}(u) \leq \min(u,1) \leq \epsilon + 1_{(\epsilon,+\infty)}(u) \text{ for } x \geq 0 
+\end{equation}
+
+If we let $u \triangleq |f_j(x)-f(x)|$ in (\ref{eqn:epsil}) and note $
+    \int_{R^n}1_{|f_j(x)-f(x)| > \epsilon} d\mu(x) = \mu\{ x: |f_j(x)-f(x) > \epsilon \}$, we have the following two equations: 
+\begin{equation}
+    \epsilon\mu \{ x: |f_j(x)-f(x)| > \epsilon \}  \leq \int_{R^n} \min(|f_j(x)-f(x)|,1)d\mu(x) \label{eqn:integ1} 
+\end{equation}
+\begin{equation}
+       \epsilon + \mu \{ x: |f_j(x)-f(x)| > \epsilon \} \geq  \int_{R^n} \min(|f_j(x)-f(x)|,1) d\mu(x) \label{eqn:integ2} 
+\end{equation}
+If (c) is true, (\ref{eqn:integ1}) implies (b).
+On the other hand, if (b) is true, (\ref{eqn:integ2}) implies $\epsilon \geq \lim_{j \to \infty} \int_{R^n} \min(|f_j(x)-f(x)|,1)d\mu(x)$, which implies (c).
+\end{proof} 
+\end{lemma}
+
+%\begin{definition} 
+%\textbf{Locally compact metric space}
+%Let  
+%\end{definition}
+%\begin{definition} 
+%\textbf{Regular measure}
+%\end{definition}
+
+\begin{definition}
+    A sequence of functions $\{f_n\}$ converges to a function $f$ uniformly on compacta if for all compact $K \subset R^n$, $\rho_K(f_n,f) \to 0$ as $n \to \infty$.
+\end{definition}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{lemma}\label{HornikLemma2.2}
+% Prop9.3.21 of Calin
+    If $\{f_n\}$ is a sequence of functions in $M^r$ that converges uniformly on compacta to the function $f$ then $\rho_\mu(f_n,f) \to 0$.
+    \begin{proof}
+\iffalse    
+        Pick an $\epsilon >0$. By Lemma \ref{HornikLemma2.1} it is sufficient to find $N \in \mathcal{N}$ such that for all $n \geq N$ we have $\int \min\{ f_n(x)-f(x),1\}\mu(dx) < \epsilon.$ Without loss of generality, we suppose $\mu(R^r)=1.$ Because $R^r$ is a locally compact metric space, $\mu$ is a regular measure. Thus there is a compact subset $K$ of $R^r$ with $\mu(K)>1 -\epsilon/2.$ Pick $N$ such that for all $n \geq N$, $\sup_{x \in K}|f_n(x)-f(x)| < \epsilon/2.$ Now $\int_{R^r - K} \min\{ |f_n(x)-f(x)|,1 \} \mu(dx)+\int_K \min\{|f_n(x)-f(x)|,1\}\mu(dx) < \epsilon/2 + \epsilon/2 = \epsilon$ for all $n \leq N$. 
+\fi       
+        Pick an $\epsilon >0$. By Lemma \ref{HornikLemma2.1} it is sufficient to show part (c),which says we can find $N \in \mathcal{N}$ such that for all $j \geq N$ we have $\int \min\{ |f_j(x)-f(x)|,1\}\mu(dx) < \epsilon.$ 
+        
+        Let us denote by $B(o,r)$ a closed Euclidean ball of radius $r$ centered at the origin. Then $R^n$ can be written as a limit of an ascending sequence of compact sets as $R^n = \bigcup_{r \geq 1} B(o,r)=\limsup_r B(o,r)$. From the sequential continuity of the probability measure $\mu$, we get $\mu(R^n) = \lim_{r \to \infty} \mu(B(o,r)) = 1$. Therefore, for a large enough $r$, we have $\mu(B(o,r)) > 1 -\epsilon/2$. Now consider the compact set $K \triangleq B(o,r)$ and note $\mu(R^n\setminus K)=\mu(R^n)-\mu(K)=1-\mu(K) < 1- (1-\epsilon/2) = \epsilon/2$. 
+        Also note the assumption that says the sequence $f_n$ converges uniformly on compacta to $f$, we have $\sup_{x \in K} |f_j(x)-f(x)| \to 0$ as $j \to \infty$,which is equivalent to say we can find $N \geq 0$ such that $\sup_{x \in K} |f_j(x)-f(x)| < \epsilon/2$ for all $j \geq N$. 
+
+        Consequently, we have the following inequality: \\
+        \begin{equation*}
+            \begin{aligned}
+                \int_{R^n} \min(|f_j(x) - f(x)|,1) d\mu(x) & = \int_{R^n \setminus K} \min(|f_j(x) - f(x)|,1) d\mu(x) + \int_{K} \min(|f_j(x) - f(x)|,1) d\mu(x) \\
+                & \leq \int_{R^n \setminus K} 1 \cdot d\mu(x) + \int_K  \min(\sup_{x \in K}|f_j(x) - f(x)|,1) d\mu(x) \\
+                & = \mu(R^n \setminus K) + \int_K  \min(\sup_{x \in K}|f_j(x) - f(x)|,1) d\mu(x) \\
+                & < \epsilon/2 +  \int_K \sup_{x \in K}|f_j(x) - f(x)|d\mu(x) \\
+                & < \epsilon/2 + \epsilon/2\cdot \mu(K) \\
+                & < \epsilon/2 + \epsilon/2 = \epsilon \text{ for all } j \geq N.                 
+            \end{aligned}
+        \end{equation*}
+        , which is part (c) of Lemma \ref{HornikLemma2.1}.
+    \end{proof}
+\end{lemma}
+%\begin{definition} 
+%\textbf{Finite measure} [Revisit]
+%\end{definition}
+%\begin{lemma}
+%\textbf{Halmos}
+%Prop9.3.23 of Calin
+%\end{lemma}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{lemma} \label{HornikLemmaA1}
+%Prop 9.3.23 of Calin
+    For any finite measure $\mu$, $C^r$ is $\rho_\mu$-dense in $M^r$.
+    \begin{proof}
+\iffalse    
+        Pick an arbitrary $f \in M^r$ and $\epsilon > 0$. We must find $g \in C^r$ such that $\rho_\mu(f,g) < \epsilon.$ For sufficiently large $M$, $\int \min\{|f\cdot 1_{\{|f|<M\}}-f|, 1\}d\mu < \epsilon/2$. By Halmos (1974. Theorems 55.C and D. p. 241-242), there is a continuous $g$ such that $\int |f\cdot 1_{\{|f|<M\}}-g|d\mu < \epsilon/2$. Thus $\int \min \{|f-g|,1\}d\mu < \epsilon.$  
+\fi        
+ Pick an arbitrary $f \in M^r$ and $\epsilon > 0$. We must find $g \in C^r$ such that $\rho_\mu(f,g) < \epsilon.$ First, consider $A_n \triangleq \{ x : |f(x)| > n \}$. Since $A_{n+1} \subset A_n$ and $A_n \in B(R^n)$, $\{A_n\}$ is a decreasing sequence of measurable sets with $\lim A_n = \bigcap_n A_n = \{ x: |f(x)| = \infty \}$. From the sequential continuity and the fact $f$  is finite a.e., we get $\mu(A_n) \to 0$ as $n \to \infty$. Therefore we can choose $M$ large enough such that $\mu\{ |f| > M \} < \epsilon/2$ and obtain $\int \min(|f\cdot 1_{\{|f|<M\}}-f|, 1)d\mu = \int_{|f| \geq M} \min(|f|,1) d\mu = \int_{|f| \geq M} d\mu = \mu\{ |f| > M \} < \epsilon/2$. On the other hand, it can be shown (see \cite{Halmos} Theorems 55.C and D. p. 241-242) there is a continuous $g$ such that $\int |f\cdot 1_{\{|f|<M\}}-g|d\mu < \epsilon/2$. By Triangle inequality, we have the following:
+ 
+ \begin{equation}
+     \begin{aligned}
+         \int \min (|f-g|,1) d\mu & \leq \int \min (|f-f\cdot 1_{\{|f|<M\}}|,1) d\mu +  \int \min( |f\cdot 1_{\{|f|<M\}}-g|,1)d\mu \\
+         & < \epsilon/2 + \int |f\cdot 1_{\{|f|<M\}}-g| d\mu \\
+         & < \epsilon/2 + \epsilon/2 = \epsilon
+     \end{aligned}
+ \end{equation}
+    By Lemma \ref{HornikLemma2.1}, we have $\rho_u(g,f) \to 0$, which shows $C^r$ is $\rho_\mu$-dense in $M^r$ since $g \in C^r$ and $f \in M^r$.  
+    \end{proof}
+
+\end{lemma}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{thm}
+%\textbf{Approximation of Borel measurable functions by NN}
+\textbf{[Hornik89, Theorem 2.2]}
+% Thm 9.3.24 of Calin (Thm2.2 of Hornkik89)
+
+For every continuous nonconstant function $G$, every $r$, and every probability measure $\mu$ on ($R^{r},B^{r}$), $\Sigma\Pi^{r}(G)$ is $\rho_{\mu}$-dense in $M^{r}$.
+ 
+\end{thm}
+\begin{proof} %Proof from Thm2.2 of Hornik89 (may see Thm9.3.24 of Calin)[Revisit]
+    Given any continuous nonconstant function, it follows from Theorem \ref{HornikThm2.1} and Lemma \ref{HornikLemma2.2} that $\Sigma\Pi^r(G)$ is $\rho_\mu$-dense in $C^r$. Because $C^r$ is $\rho_\mu$-dense in $M^r$ by Lemma \ref{HornikLemmaA1}, it follows, by applying the triangle inequality, that $\Sigma\Pi^r(G)$ is $\rho_\mu$-dense in $M^r$.  
+\end{proof}
+
+
+
+\subsection{\textbf{Understanding Generative Networks}}\label{sec:GenerativeModels}
+
+In this subsection, we will discuss about two classic types of the Generative Adversarial Network (GAN), which has worked as a catalyst for turning machine-learning and AI into the main stream in academia and industry today. 
+The first one is f-GAN, which is .... while the second one is W-GAN, which is....
+
+Specifically, we will be able to understand how the performance metric each of the two GANs is striving to optimize is derived from the perspective of measure theory. This can often help understand and improve the proposed algorithms in a principled way. In addition, we can potentially come up with a new design through the knowledge and intuitions obtained in the process.
+
+%\subsubsection{\textbf{More concepts from measure theory}}
+
+\subsubsection{\textbf{Structure of GAN}} ~\\
+Let $X$ and $Z$ denote the ambient and latent spaces equipped with the measure $\mu$ and $\xi$, respectively. The GAN solves the following minimax game:
+\begin{equation}
+    \min_{G}\max_{D}l_{GAN}(D,G)
+\end{equation}
+where $G$ represents the Generator which maps a latent vector $z$ to a sample vector in the ambient space and $D$ represents the Discriminator which takes the mapped sample vector as an input to differentiate it from the true sample in the ambient space. The quantity $l_{GAN}(D,G)$ represents the differentiation power, which $G$ attempts to minimize while $D$ attempts to maximize, is defined as follows:
+\begin{equation}
+    \begin{aligned}
+    l_{GAN}(D,G) & \triangleq E_{\mu}[\log D(x)]+E_{\xi}[\log(1-D(G(z)))] \\
+    & = \int_{X}\log D(x)d\mu(x) + \int_{Z}\log(1-D(G(z)))d\xi(z)
+    \end{aligned}
+\end{equation}
+
+[Revisit] Draw diagrams here
+
+\subsubsection{\textbf{f-GAN}} ~\\
+
+\begin{definition} 
+\textbf{Push-Forward of a measure}
+
+Let $(\chi,F,\mu)$ be a probability space and let $y$ and $f:\chi \mapsto y $ be a set and a function, respectively. Then the push-forward of $\mu$ by f is the probability measure $\nu : f(F) \mapsto [0,1]$ defined by 
+\begin{equation}
+    \nu(S) = \mu(f^{-1}(S))
+\end{equation}
+which is often denoted by $\nu=f_{\#\mu}$
+\end{definition}
+
+\begin{definition} 
+\textbf{Change of variable formula}
+
+Let $(X,F,\mu)$ be a probability space and let $f: X \mapsto Y$ be a function such that a push-forward measure $\nu$ is defined by $\nu=f_{\#\mu}$. Then we have
+\begin{equation}
+\int_{Y}gd\nu = \int_{X}g\circ fd\mu  
+\end{equation}
+
+where $\circ$ denotes the function composition.
+\end{definition}
+
+\begin{definition} 
+\textbf{Absolutely continuous measure}
+
+If $\mu$ and $\nu$ are two measures on any event set $F$ of $\Omega$, we say $\nu$ is absolutely continuous with respect to $\mu$, or $\nu << \mu$, if for every measurable set $A$, $\mu(A)=0$ implies $\nu(A)=0$.
+
+\end{definition}
+
+
+\begin{definition} 
+\textbf{Radon-Nikodym Theorem}
+
+Let $\lambda$ and $\nu$ be two measures on any event set $F$ of $\Omega$. If $\lambda << \nu$, then there exists a non-negative function $g$ on $\Omega$ such that 
+\begin{equation}
+    \lambda(A) = \int_{A}d\lambda = \int_{A}gd\lambda, A \in F.
+\end{equation}
+\end{definition}
+The function $g$ is called the Radon-Nikodym derivative or density of $\lambda$ with respect to $\nu$ and denoted as $d\lambda/d\nu$.
+
+\begin{definition} 
+\textbf{f-Divergence}
+
+Let $\mu$ and $\nu$ are two probability distributions over a space $\Omega$ such that $\mu<<\nu$. Then for a convex function $f$ such that $f(1)=0$, the f-divergence of $\mu$ from $\nu$ is defined as 
+\begin{equation}
+    D_{f}(\mu||\nu) \triangleq \int_{\Omega}f(\frac{d\mu}{d\nu})d\nu
+\end{equation}
+where $d\mu/d\nu$ is the Radon-Nikodym derivative with respect to $\nu$.
+\end{definition}
+If $\mu<<\xi$ and $\nu<<\xi$ for a common measure $\xi$ on $\Omega$, then their probability densities $p$ and $q$ satisfy $d\mu=pd\xi$ and $d\nu=qd\xi$. In this case the f-divergence can be written as 
+\begin{equation}
+    D_{f}(P||Q) \triangleq \int_{\Omega}f(\frac{p(x)}{q(x)})q(x)d\xi(x)    
+\end{equation}
+The idea of f-GAN is to use f-divergence as a statistical distance between the real data distribution $X$ with the measure $\mu$ and the synthesized data distribution with the measure $\nu$ so that the probability measure $\nu$ gets close to $\mu$.
+\begin{lemma}
+    Let $\mu << \nu$. Then for any class of functions $\tau$ mapping from $X$ to $R$, we have the lower bound $D_{f}(\mu||\nu) \geq \sup_{\tau \in I^{*}} \int_{X} \tau(x)d\mu(x)-\int_{x}f^{*}(\tau(x))d\nu(x)$, where $f^{*}: I^{*} \mapsto R$ is the convex conjugate of $f$.
+\end{lemma}
+\begin{proof}
+\begin{equation*}
+\begin{aligned}
+     D_{f}(\mu||\nu) & = \int_{X}f(\frac{d\mu}{d\nu})d\nu \\
+     &= \int_{X}\sup_{\tau \in I^{*}} \{\tau\frac{d\mu}{d\nu}-f^{*}(\tau)\}d\nu \\
+     & \geq \sup_{\tau \in I^{*}} \int_{X} \{ \tau\frac{d\mu}{d\nu}-f^{*}(\tau) \}d\nu \\ %See https://math.stackexchange.com/questions/2764593/inequality-involving-supremum-and-integral
+     & = \sup_{\tau \in I^{*}} \int_{X} \{ \tau d\mu-f^{*}(\tau)d\nu \}\\
+     & = \sup_{\tau \in I^{*}} \int_{X} \tau(x) d\mu(x)-\int_{X}f^{*}(\tau(x))d\nu(x) 
+\end{aligned}
+\end{equation*}
+The lower bound is tight and can be achieved with $\tau=f^{'}(\frac{d\mu}{d\nu}$) = $f^{'}(\frac{p(x)}{q(x)})$ when $d\mu = pd\xi$ and $d\nu=qd\xi$ for a common measure $\xi$.    
+\end{proof}
+Note the function $\tau$ should take the values within the domain of $f^{*}$. For this, one can define $\tau(x)$ in the following way: \\
+Let $\tau(x) \triangleq g_{f}(V(x))$, where $V: X \mapsto R$ without any constraint on the output range and $g_{f}:R \mapsto I^{*}$ is an output activation function mapping the output to the domain of $f^{*}$. \\
+If we choose $f(t) \triangleq -(t+1)\log(t+1)+t\log t$, we have $f^{*}(u)=\sup_{t \in R_{+}} \{ ut+(t+1)\log(t+1)-t \log t \} = -\log(1-e^{u})$.
+The domain of $f^{*}$ should be $R_{-}$ in order to make $1-e^{u} > 0$. For this condition, we can choose $g_{f}(V) \triangleq \log(\frac{1}{1+e^{-V}})= \log (D)$ if we define $D \triangleq \frac{1}{1+e^{-V}}$. This in turn will lead to $f^{*}(g_{f}(V)) = -\log(1-D)$ .
+
+Accordingly, we have
+ 
+\begin{equation*}
+\begin{aligned}
+     D_{f}(\mu||\nu) & = \sup_{\tau \in I^{*}} \int_{X} \tau(x) d\mu(x)-\int_{X}f^{*}(\tau(x))d\nu(x) \\
+     & = \sup_{g_{f}, V} \int_{X} g_{f}(V(x)) d\mu(x)-\int_{X}f^{*}(g_{f}(V(x)))d\nu(x) \\
+    & = \sup_{D} \int_{X} \log D(x) d\mu(x)+\int_{X} \log (1-D(x)) d\nu(x)
+\end{aligned}
+\end{equation*}
+
+Note the measure $\nu$ is for the samples from latent space $Z$ with the measure $\xi$ by generator $G(z), z \in Z$, hence $\nu$ is the push-forward measure $G_{\#\xi}$.
+
+Using the change-of-variable formula, the final loss function is given by \\
+\begin{equation}
+    l(D,G) \triangleq \sup_{D} \int_{X} \log D(x)d\mu(x)+\int_{Z}\log(1-D(G(z)))d\xi(z).
+\end{equation}
+
+Since Generator tries to minimize the above loss function, we finally get the quantity GAN is trying to optimize as follows:
+\begin{equation}
+    \min_{G} l(D,G) = \min_{G} \max_{D} \int_{X} \log D(x)d\mu(x)+\int_{Z}\log(1-D(G(z)))d\xi(z).
+\end{equation}
+\subsubsection{\textbf{W-GAN}}
+
+Unlike the f-divergence, the Wasserstein metric is one that satisfies all four properties of a metric.
+\begin{definition} 
+\textbf{Wasserstein Metric}
+
+Let ($M,d$) be a metric space with a metric $d$.
+For $p\geq1$, let $P_p(M)$ denote the collection of all probability measures $\mu$ on $M$ with a finite $p$-th moment. Then the $p$-th Wasserstein distance between two probability measures $\mu$ and $\nu$ in $P_p(M)$ is defined as
+\begin{equation}
+\begin{split}
+     W_{p}(\mu,\nu) &\triangleq (\inf_{\pi \in \Pi(\mu,\nu)}\int_{M\times M}d(x,y)^{p}d\pi(x,y))^{1/p} \\
+    &= (\inf_{\pi \in \Pi(\mu,\nu)}E_{\pi}[d(x,y)^{p}])^{1/p}
+\end{split}
+\end{equation}
+where $\Pi(\mu,\nu)$ denotes the collection of all measures on $M\times M$ with marginals $\mu$ and $\nu$ on the first and second factors, respectively, and $X$ and $Y$ are random vectors with the joint distribution $\pi$.
+\end{definition}
+
+\begin{definition} 
+\textbf{Optimal Transport}
+
+We say $T: X \mapsto Y$ transports a probability measure $\mu \in P(x)$ to another measure $\nu \in P(y)$, if 
+\begin{equation}
+    \nu(B) = \mu(T^{-1}(B))  
+\end{equation}
+for all $\nu$-measurable sets $B$. In other words, $\nu=T_{\#\mu}$.  
+\end{definition}
+
+Suppose there is a cost function $c:X \times Y \longmapsto R \cup  \{\infty\} $ such that $c(x,y)$ represents the cost of moving one unit of mass from $x \in X$ to $y \in Y$. The optimal transport (OT) problem is to find a transport map $T$ that transports $\mu$ to $\nu$ at the minimum total transportation cost as follows:
+\begin{equation}
+%\begin{align*}
+    \min_{T}M(T) \triangleq \int_{X}c(x,T(x))d\mu(x) \qquad  \text{ s.t. } \nu = T_{\#\mu}
+%\end{align*}
+\end{equation}
+\iffalse
+[Revisit] convex conjugate
+\fi
+\begin{definition} 
+\textbf{Kantorovich Formulation}
+
+Define a joint measure $\Pi \in P(X,Y)$ s.t. the original optimal transport problem can be relaxed as
+\begin{equation}
+\begin{aligned}
+ & \min_{\pi} \int_{X \times Y}c(x,y)d\pi(x,y) \\
+ \text{ s.t. }  & \pi(A \times Y) = \mu(A) \text{ and } \pi(X \times B) = \nu(B) \\
+ & \text{ for all measurable sets } A \in X \text{ and } B \in Y.
+\end{aligned} 
+\end{equation}
+\end{definition}
+
+\begin{thm}
+\textbf{Kantorovich Duality Theorem}
+
+Let $(X,\mu)$ and $(Y,\nu)$ be two probability spaces and let $c: X \times Y \longmapsto R$ be a continuous cost function such that $| c(x,y) | \leq c_{X}(x) + c_{Y}(y) $ for some $c_X \in L^{1}(\mu)$ and $c_Y \in L^{1}(\nu)$, where $L^{1}(\mu)$ denotes a Lebesgue space with an integral function with measure $\mu$. Then there is a duality:
+%\begin{equation}
+\begin{align}
+& \min_{\pi \in \Pi(\mu,\nu)}\int_{X \times Y} c(x,y)d\pi(x,y) \notag \\
+= & \sup_{\varphi \in L^{1}(\mu)}{\int_{X}\varphi(x)d\mu(x) + \int_{Y}\varphi^{c}(y)d\nu(y)} \\
+= & \sup_{\psi \in L^{1}(\mu)}{\int_{X}\psi^{c}(x)d\mu(x) + \int_{Y}\psi(y)d\nu(y)} 
+\end{align}    
+%\end{equation}
+where $\Pi(\mu,\nu) \triangleq \{\pi | \pi(A \times Y) = \mu(A), \pi(X \times B) = \nu(B)\}$ and Kantorovich potentials $\varphi$ and $\psi$ have their c-transforms defined as: \\
+\begin{equation}   
+\begin{aligned}
+ \varphi^{c} & \triangleq \inf_{x}\{c(x,y) - \varphi(x)\} \\
+ \psi^{c} & \triangleq \inf_{y}\{c(x,y)-\psi(y)\} 
+\end{aligned}    
+\end{equation}
+\end{thm}
+W-GAN minimizes the Wasserstein-1 norm:
+\begin{equation}
+    W_{1}(P,Q) \triangleq \min_{\pi \in \Pi(\mu,\nu)} \int_{X \times X} || x -x^{'} || d\pi(x,x^{'})
+\end{equation}
+where $X$ is the ambient space, $\mu$ and $\nu$ are measures for the real and generated samples, respectively, and $\pi(x,x^{'})$ is the joint distribution with the marginals $\mu$ and $\nu$.
+
+Recall the Kantorovich dual formulation of the Wasserstein 1-norm:
+\begin{equation}
+    W_{1}(\mu,\nu) = \sup_{ \varphi \in Lip_{1}(X)}\{ \int_{X}\varphi(x)d\mu(x)-\int_{X} \varphi(x^{'})d\nu(x^{'})  \}
+\end{equation}, where $Lip_{1}(X)$ denotes the 1-Lipschitz function space with domain $X$. 
+Minimizing this quantity over the possible measure $\nu$ amounts to the following:
+\begin{equation}
+    \min_{\nu}W_{1}(\mu,\nu) = \min_{\nu} \max_{\varphi \in Lip_{1}(X)}\{ \int_{X} \varphi(x)d\mu(x) - \int_{X} \varphi(x^{'})d\nu(x^{'}) \}
+\end{equation}
+Assuming G is the mapping used to generate the sample $x^{'}$ with $\nu$ as the push-forward measure of $\xi$ from the latent space $z$, we get the following by the change-of-variable formula:
+\begin{equation}
+\begin{aligned}
+    \min_{\nu} W_{1}(\mu,\nu) & =  \min_{G} W_{1}(\mu,\nu) \\
+    & = \min_{G} \max_{\varphi \in Lip_{1}(X)} \{\int_{X}\varphi(x)d\mu(x)-\int_{Z} \varphi(G(z))d\xi(z) \}    
+\end{aligned}
+\end{equation}
+where $G(z)$ is called the Generator and the Kantorovich potential $\varphi$ is called the discriminator.
+
+
+
+\section{\textbf{Conclusion}}\label{sec:conclusion}
+In general, Lebesgue measures and $L^p$ spaces provide versatile frameworks for studying general functions and sets. This includes discontinuous functions and non-measurable sets such as the Vitali sets which the reader can reference a paper by BK Lahiri. Furthermore, there are lots of other properties of $L^p$ spaces yet not covered in this paper such as dual spaces and atomic decomposition which the reader is encouraged to explore.
+
+\section{\textbf{References}}
+
+\begin{thebibliography}{9}
+\bibitem{texbook}
+Elias M. Stein and Rami Shakarchi (2016) \emph{Real Analysis: Measure Theory, Integration, and Hilbert Spaces}, Princeton University Press.
+
+\bibitem{Royden}
+Elias M. Stein and Rami Shakarchi (2016) \emph{Real Analysis: Measure Theory, Integration, and Hilbert Spaces}, Princeton University Press.
+
+\bibitem{Halmos}
+Elias M. Stein and Rami Shakarchi (2016) \emph{Measure Theory}, Princeton University Press.
+
+\bibitem{RudinMathAnalysis}
+Elias M. Stein and Rami Shakarchi (2016) \emph{Principles of Mathematical Analysis}, Princeton University Press.
+
+%\bibitem{Krantz}
+%Closely follows Bartle's
+
+%\bibitem{Browder}
+%Chapter 9,10 are useful
+
+%\bibitem{Nelson}
+%shows two approaches to Lebesgue integral derivation
+
+%\bibitem{Burk}
+%Very detailed and unique 1-D derivation of Lebesgue integral
+ 
+%\bibitem{Johnston}
+%
+
+%\bibitem{Ito}
+%르벡적분입문
+%처음일기에는 간면하지 않은 서술임 
+
+%\bibitem{Aikawa}
+%르벡적분-요점과연습
+
+%\bibitem{Iwata}
+%르벡적분-이론과계산수법
+
+%\bibitem{Capinski}
+%Very friendly exposition with a probability focus
+
+%\bibitem{Siga}
+%르벡적분에서 확률론
+
+%\bibitem{Pollard}
+%서술이난삽함
+
+%\bibitem{Milton}
+%Probability theory with essential analysis
+
+%\bibitem{Sasane}
+%The how and why of one variable calculus
+
+%\bibitem{Kielhofer}
+%Calculus of variations - an introduction to one-dimensional theory with examples and exercises
+
+%\bibitem{Sasane}
+%A friendly approach to functional analysis
+
+%\bibitem{Sasane}
+%Optimization in function spaces
+
+%\bibitem{Nowinski}
+%Application of functional analysis in engineering
+
+%\bibitem{Lebeder}
+%Advanced engineering analysis
+
+
+\bibitem{lamport94}
+J. Susan Milton and Chris P. Tsokos (1976) \emph{Probability Theory With the Essential Analysis}, Addison
+Wesley, Massachusetts, no 10.
+
+%\bibitem{AIM}
+%Somebody \emph{Mathematical foundations of AIM}
+%_Now folder in iPad
+
+%\bibitem{Calin10}
+%Calin \emph{Information Representation}, in Deep Learning Architectures
+%_Now folder in iPad
+
+%\bibitem{Calin789}
+%Calin \emph{Approximation}, in Deep Learning Architectures
+%_Now folder in iPad
+
+\bibitem{Hanin}
+B. Hanin \emph{ Universal function approximation by deep neural nets with
+bounded width and relu activations} 
+%_Now folder in iPad
+
+\bibitem{Cybenco}
+G. Cybenco \emph{ Approximation by superpositions of a sigmoidal Function}, in Math. Control Signals Systems (1989), Vol 2, pp. 303-314
+%_Now folder in iPad
+
+\bibitem{Hornik1989}
+K. Hornik \emph{ Multilayer feedforward Networks are universal approximators}, in Neural Networks (1989), Vol 2, pp. 359-366
+
+\bibitem{Hornik1991}
+K. Hornik, M. Stinchcombe, and H. White \emph{ Approximation capabilities of multilayer feedforward networks}, in Neural Networks (1991), Vol 4, pp. 251-257
+%_Now folder in iPad
+
+\bibitem{Lu}
+Z. Lu, H. Pu, , F.Wang, Z. Hu, L.Wang,\emph{ The expressive power of neural networks: a view from the width} 
+, in Neural Information Processing Systems (2017), pp. 6231–6239
+
+%\bibitem{2023}
+%Somebody (2023) \emph{Measure theoretic results for approximation by neural networks with limited weights}, 
+%_Now folder in iPad
+
+%\bibitem{2023}
+%Somebody (oneday) \emph{ A mathematical theory of attention}, 
+%_Now folder in iPad
+
+\bibitem{Goodfellow}
+I. Goodfellow, J. Pouget-Abadie, M. Mirza, B. Xu, D. Warde-Farley, S. Ozair, A. Courville,
+and Y. Bengio, \emph{Generative adversarial nets}, in Advances in Neural Information Processing Systems, 2014, pp. 2672–2680.
+
+\bibitem{Nowozin}
+S. Nowozin, B. Cseke, and R. Tomioka, \emph{f -GAN: Training generative neural samplers using variational divergence minimization}, in Advances in Neural Information Processing Systems, 2016, pp. 271–279.
+
+\bibitem{Arjovsky}
+M. Arjovsky, S. Chintala, and L. Bottou, \emph{Wasserstein GAN}, arXiv preprint
+arXiv:1701.07875, 2017.
+
+\bibitem{Creswell}
+A. Creswell et al.,\emph{Generative adversarial networks : an overview}, submitted to IEEE-SPM, Apr. 2017.
+
+\bibitem{Villani}
+C. Villani, \emph{Optimal transport: old and new}, Springer Science $\&$ Business Media, 2008, vol.338.
+
+\end{thebibliography}
+
+
+\end{document}
